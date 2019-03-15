@@ -61,13 +61,6 @@ export class ProfilesComponent implements AfterViewInit {
 
   @Output() onClose: EventEmitter<string> = new EventEmitter();
   domain;
-  profiles_sections = [
-    {
-        title: "Main Identity",
-        description: "Your Main Identitry is the address you signed up for Runbox with, and is your main identity.",
-        key: "main"
-    },
-  ]
   profiles = {
     main : [
         {
