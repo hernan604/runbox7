@@ -43,6 +43,7 @@ import {
   MatTooltipModule,
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
+import { ProfilesModal } from './profiles/profiles.modal';
 import { CanvasTableModule } from './canvastable/canvastable';
 import { MoveMessageDialogComponent } from './actions/movemessage.action';
 import { RunboxWebmailAPI } from './rmmapi/rbwebmail';
@@ -58,6 +59,7 @@ import { RMMAuthGuardService } from './rmmapi/rmmauthguard.service';
 import { ResizerModule } from './directives/resizer.module';
 import { DomainRegisterModule } from './domainregister/domainregister.module';
 import { DomainRegisterComponent } from './domainregister/domainregister.component';
+import { ProfilesComponent } from './profiles/profiles.component';
 import { MainContainerComponent } from './maincontainer.component';
 import { HeaderToolbarComponent } from './menu/headertoolbar.component';
 import { LocalSearchIndexModule } from './xapian/localsearchindex.module';
@@ -79,6 +81,7 @@ const routes: Routes = [
         component: HeaderToolbarComponent
       },
       { path: 'domainregistration', component: DomainRegisterComponent},
+      { path: 'profiles', component: ProfilesComponent},
       { path: 'contacts', component: ContactsAppComponent },
       { path: 'index_dev.html', component: AppComponent },
       { path: 'app', component: AppComponent },
@@ -141,7 +144,7 @@ const routes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: RMMHttpInterceptorService, multi: true}
   ],
   bootstrap: [MainContainerComponent],
-  entryComponents: [MoveMessageDialogComponent]
+  entryComponents: [MoveMessageDialogComponent, ProfilesModal,]
 })
 export class AppModule { }
 

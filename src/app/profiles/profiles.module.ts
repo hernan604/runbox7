@@ -18,27 +18,30 @@ import {
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
-
+import { ProfilesModal } from './profiles.modal';
 
 @NgModule({
     declarations: [
-	ProfilesComponent,
+    ProfilesComponent,
     ProfilesForm,
+    ProfilesModal,
     ],
     imports: [
-	BrowserModule,
-	BrowserAnimationsModule,
-	FormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
     MatInputModule,
-	MatButtonModule,
-	MatIconModule,
-	MatListModule,
-	MatSidenavModule,
-	MatToolbarModule,
-	MatTooltipModule,
-	MatTableModule,
-	MenuModule,
-	RouterModule
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatTableModule,
+    MenuModule,
+    RouterModule
+    ],
+    entryComponents: [
     ],
     providers: [
     ],

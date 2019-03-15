@@ -54,6 +54,8 @@ import {
   MatSnackBar,
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
+import {ProfilesModal} from './profiles.modal';
+
 
 @Component({
     selector: 'profiles-form',
@@ -61,7 +63,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     <div>
         <ng-content select="[section-header]"></ng-content>
         <ng-content select="[section-description]"></ng-content>
-        <form *ngFor="let item of values">
+        <form *ngFor="let item of values; let i = index;">
             <mat-form-field class="email" style="margin: 10px;">
                 <input matInput placeholder="Email" [value]="item.email">
             </mat-form-field>
@@ -75,20 +77,24 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                 <input matInput placeholder="Signature" [value]="item.signature">
             </mat-form-field>
             <button 
-                mat-raised-button 
-                color='primary' 
                 (click)="edit(item)" 
+                color='primary' 
+                mat-raised-button 
                 style="margin: 10px;"
             >
                 EDIT
             </button>
-            <button *ngIf="!is_delete_disabled" mat-raised-button color='primary' 
+            <button 
+                (click)="delete(i, item)"
+                *ngIf="!is_delete_disabled"
+                color='primary' 
+                mat-raised-button
                 style="margin: 10px;"
             >
                 Delete
             </button>
         </form>
-        <ng-content select="section-buttons"></ng-content>
+        <ng-content select="[section-buttons]"></ng-content>
     </div>
 
         `
@@ -102,8 +108,20 @@ export class ProfilesForm {
     //  this.delete.emit(anIndex);
     //  this.images.splice(anIndex, 1);
     //}
-    edit (item) {
+    constructor(public dialog: MatDialog) {}
+    edit (item): void {
         console.log("CLICK", item)
+        const dialog_ref = this.dialog.open(ProfilesModal, {
+            width: '300px',
+            data: item
+        });
+        dialog_ref.afterClosed().subscribe(result => {
+            console.log('Dialog Close !', result)
+            item = result;
+        });
+    }
+    delete (i, item) {
+        console.log("delete", i, item)
     }
 }
 
