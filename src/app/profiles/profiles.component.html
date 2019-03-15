@@ -1,0 +1,58 @@
+<mat-sidenav-container class="profiles">
+    <mat-sidenav mode="side" opened=false></mat-sidenav>
+    <mat-sidenav-content>
+        <section class="mat-typography">
+            <h1 class="mat-h1">Identities</h1>
+            <mat-divider></mat-divider>
+            <div>
+                <profiles-form [values]="profiles.main" is_delete_disabled="true">
+                    <div section-header>
+                        <h2>
+                            Main Identity
+                        </h2>
+                    </div>
+                    <div section-description>
+                        <h3>
+                            Your Main Identity is the address you signed up for Runbox with, and is your main identity.
+                        </h3>
+                    </div>
+                </profiles-form>
+                <profiles-form [values]="profiles.aliases">
+                    <div section-header>
+                        <h2>
+                            Email Aliases
+                        </h2>
+                    </div>
+                    <div section-description>
+                        <h3>
+                            Aliases are other email addresses that point to your Main Identity, and can be created in Settings > Account > Aliases.
+                        </h3>
+                    </div>
+                    <div section-buttons>
+                        <button mat-raised-button color='primary'>
+                            Add Alias
+                        </button>
+                    </div>
+                </profiles-form>
+                <profiles-form [values]="profiles.aliases">
+                    <div section-header>
+                        <h2>
+                            External email addresses
+                        </h2>
+                    </div>
+                    <div section-description>
+                        <h3>
+                            Profiles lets you send email from addresses that are not among your System Address or Aliases, and require verification via an email sent to the given From Address.
+                        </h3>
+                    </div>
+                    <div section-buttons>
+                        <button mat-raised-button color='primary'>
+                            Add Email
+                        </button>
+                    </div>
+                </profiles-form>
+            </div>
+        </section>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
