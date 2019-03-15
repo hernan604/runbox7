@@ -62,9 +62,23 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     template: `
         <h1 mat-dialog-title>Edit </h1>
         <div mat-dialog-content>
-          <p>{{data.email}}</p>
+            <form>
+                <mat-form-field style="margin: 10px;">
+                    <input matInput placeholder="Email" [value]="data.email">
+                </mat-form-field>
+                <mat-form-field style="margin: 10px;">
+                    <input matInput placeholder="From" [value]="data.from">
+                </mat-form-field>
+                <mat-form-field style="margin: 10px;">
+                    <input matInput placeholder="Reply-to" [value]="data.reply_to">
+                </mat-form-field>
+                <mat-form-field style="margin: 10px;">
+                    <input matInput placeholder="Signature" [value]="data.signature">
+                </mat-form-field>
+            </form>
         </div>
         <div mat-dialog-actions>
+          <button mat-raised-button (click)="save()">Sav3</button>
           <button mat-raised-button (click)="close()">Close</button>
         </div>
     `
@@ -76,6 +90,10 @@ export class ProfilesModal {
         public dialog_ref: MatDialogRef<ProfilesModal>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {}
+    save() {
+        console.log('SAVE', this.data);
+        this.close();
+    }
     close() {
         this.dialog_ref.close({});
     }
