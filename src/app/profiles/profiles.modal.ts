@@ -64,21 +64,33 @@ import {MatFormFieldModule} from '@angular/material/form-field';
         <div mat-dialog-content>
             <form>
                 <mat-form-field style="margin: 10px;">
-                    <input matInput placeholder="Email" [value]="data.email">
+                    <input matInput placeholder="Email" 
+                        name="email"
+                        [(ngModel)]="data.email"
+                    >
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
-                    <input matInput placeholder="From" [value]="data.from">
+                    <input matInput placeholder="From"
+                        name="from"
+                        [(ngModel)]="data.from"
+                    >
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
-                    <input matInput placeholder="Reply-to" [value]="data.reply_to">
+                    <input matInput placeholder="Reply-to"
+                        name="reply_to"
+                        [(ngModel)]="data.reply_to"
+                    >
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
-                    <input matInput placeholder="Signature" [value]="data.signature">
+                    <input matInput placeholder="Signature"
+                        name="signature"
+                        [(ngModel)]="data.signature"
+                    >
                 </mat-form-field>
             </form>
         </div>
         <div mat-dialog-actions>
-          <button mat-raised-button (click)="save()">Sav3</button>
+          <button mat-raised-button (click)="save(data)">Save</button>
           <button mat-raised-button (click)="close()">Close</button>
         </div>
     `
@@ -89,8 +101,10 @@ export class ProfilesModal {
     constructor(
         public dialog_ref: MatDialogRef<ProfilesModal>,
         @Inject(MAT_DIALOG_DATA) public data: any
-    ) {}
-    save() {
+    ) {
+        console.log('received data', data)
+    }
+    save(data) {
         console.log('SAVE', this.data);
         this.close();
     }

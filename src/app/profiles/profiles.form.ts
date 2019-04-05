@@ -59,23 +59,80 @@ import {ProfilesModal} from './profiles.modal';
 
 @Component({
     selector: 'profiles-form',
+    styles: [`
+        .profile-form form > div {
+            display: inline-block;
+            position: relative;
+            margin: 10px;
+        }
+        .profile-form form > div > div {
+            overflow: scroll;
+        }
+    `],
     template: `
-    <div>
-        <ng-content select="[section-header]"></ng-content>
+    <div class="profile-form">
+        <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <form *ngFor="let item of values; let i = index;">
+
+            <mat-divider *ngIf="i > 0"></mat-divider>
+
             <mat-form-field class="email" style="margin: 10px;">
-                <input matInput placeholder="Email" [value]="item.email">
+
+                <input
+                    *ngIf="item.profile && item.profile.reference_type == 'aliases' && item.reference.virtual_domain && item.reference.localpart && item.reference.virtual_domain.name"
+                    matInput
+                    placeholder="Email"
+                    [value]="item.reference.localpart + '@' + item.reference.virtual_domain.name"
+                >
+
+                <input
+                    *ngIf="item.profile && item.profile.reference_type == 'aliases' && ! item.reference.virtual_domain && item.reference.localpart"
+                    matInput
+                    placeholder="Email"
+                    [value]="item.reference.localpart + '@runbox.*'"
+                >
+
+                <input
+                    *ngIf="item.profile && item.profile.reference_type == 'preference' && item.reference.virtual_domain && item.reference.email && item.reference.virtual_domain.name"
+                    matInput
+                    placeholder="Email"
+                    [value]="item.reference.email + '@' + item.reference.virtual_domain.name"
+                >
+
+                <input
+                    *ngIf="item.profile && item.profile.reference_type == 'preference' && ! item.reference.virtual_domain && item.reference.email"
+                    matInput
+                    placeholder="Email"
+                    [value]="item.reference.email"
+                >
+
             </mat-form-field>
+
             <mat-form-field class="from" style="margin: 10px;">
-                <input matInput placeholder="From Name" [value]="item.from">
+                <input
+                    matInput
+                    placeholder="From Name"
+                    [value]="( item && item.reference && item.profile.name ) || ''"
+                >
             </mat-form-field>
+
             <mat-form-field class="reply_to" style="margin: 10px;">
-                <input matInput placeholder="Reply-to" [value]="item.reply_to">
+                <input
+                    matInput 
+                    placeholder="Reply-to"
+                    [value]="( item && item.reference && item.reference.reply_to ) || ''"
+                >
             </mat-form-field>
-            <mat-form-field class="signature" style="margin: 10px;">
-                <input matInput placeholder="Signature" [value]="item.signature">
-            </mat-form-field>
+
+            <div>
+                <mat-label>Signature</mat-label>
+                <div
+                    [innerHTML]="( item && item.reference && item.reference.signature ) || ''"
+                    style="width: 180px;"
+                ></div>
+            </div>
+
             <button 
                 (click)="edit(item)" 
                 color='primary' 
@@ -84,6 +141,7 @@ import {ProfilesModal} from './profiles.modal';
             >
                 EDIT
             </button>
+
             <button 
                 (click)="delete(i, item)"
                 *ngIf="!is_delete_disabled"
@@ -93,6 +151,7 @@ import {ProfilesModal} from './profiles.modal';
             >
                 Delete
             </button>
+
         </form>
         <ng-content select="[section-buttons]"></ng-content>
     </div>

@@ -61,86 +61,7 @@ export class ProfilesComponent implements AfterViewInit {
 
   @Output() onClose: EventEmitter<string> = new EventEmitter();
   domain;
-  profiles = {
-    main : [
-        {
-            email : "my@email.com",
-            from : "From Joe",
-            reply_to : "reply-to@mail.com",
-            signature : "-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-    ],
-    aliases : [
-        {
-            email : "my2@email.com",
-            from : "From2 Joe",
-            reply_to : "re2ply-to@mail.com",
-            signature : "2-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-        {
-            email : "my3@email.com",
-            from : "From3 Joe",
-            reply_to : "3reply-to@mail.com",
-            signature : "3-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-        {
-            email : "4my@email.com",
-            from : "4From Joe",
-            reply_to : "4reply-to@mail.com",
-            signature : "4-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-        {
-            email : "5my@email.com",
-            from : "5From Joe",
-            reply_to : "5reply-to@mail.com",
-            signature : "5-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-    ],
-    external : [
-        {
-            email : "6my@email.com",
-            from : "6From Joe",
-            reply_to : "6reply-to@mail.com",
-            signature : "-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-        {
-            email : "7my@email.com",
-            from : "7From Joe",
-            reply_to : "7reply-to@mail.com",
-            signature : "-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-        {
-            email : "8my@email.com",
-            from : "8From Joe",
-            reply_to : "8reply-to@mail.com",
-            signature : "8-----------------\nHugs",
-            field1 : "field111",
-            field2 : "field222",
-            field3 : "field333"
-        },
-    ]
-  };
+  profiles = {};
 
   ngAfterViewInit() {
   }
@@ -149,6 +70,27 @@ export class ProfilesComponent implements AfterViewInit {
     private http: Http,
     public snackBar: MatSnackBar,
   ) {
+    this.load_profiles();
+  }
+
+  load_profiles () {
+    this.http.get('/rest/v1/profiles', {
+    })
+    .pipe(timeout(60000))
+    .subscribe(
+      data => {
+        const reply = data.json();
+        if ( reply.status == 'error' ) {
+          this.show_error( reply.error.join( '' ), 'Dismiss' )
+        }
+        console.log('profiles', reply)
+        this.profiles = reply.result;
+        return;
+      },
+      error => {
+        return this.show_error('Could not load profiles.', 'Dismiss');
+      }
+    );
   }
 
   show_error (message, action) {

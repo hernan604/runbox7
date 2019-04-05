@@ -5,7 +5,10 @@
             <h1 class="mat-h1">Identities</h1>
             <mat-divider></mat-divider>
             <div>
-                <profiles-form [values]="profiles.main" is_delete_disabled="true">
+                <profiles-form
+                    *ngIf="profiles && profiles.hasOwnProperty('main')"
+                    [values]="profiles.main" is_delete_disabled="true"
+                >
                     <div section-header>
                         <h2>
                             Main Identity
@@ -17,7 +20,11 @@
                         </h3>
                     </div>
                 </profiles-form>
-                <profiles-form [values]="profiles.aliases">
+                <mat-divider></mat-divider>
+                <profiles-form
+                    *ngIf="profiles && profiles.hasOwnProperty('aliases')"
+                    [values]="profiles.aliases"
+                >
                     <div section-header>
                         <h2>
                             Email Aliases
@@ -38,7 +45,11 @@
                         </button>
                     </div>
                 </profiles-form>
-                <profiles-form [values]="profiles.aliases">
+                <mat-divider></mat-divider>
+                <profiles-form
+                    *ngIf="profiles && profiles.hasOwnProperty('external_email')"
+                    [values]="profiles.external_email"
+                >
                     <div section-header>
                         <h2>
                             External email addresses
