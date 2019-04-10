@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { Observable ,  of, from ,  Subject ,  AsyncSubject } from 'rxjs';
 import { MessageInfo, MailAddressInfo } from '../xapian/messageinfo';
 
+import { Profile } from '../profiles/profile';
 import { Contact } from '../contacts-app/contact';
 import { DraftFormModel } from '../compose/draftdesk.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -491,6 +492,27 @@ export class RunboxWebmailAPI {
             // console.log(params);
             return this.postForm(params).pipe(map((res) => res.split('|')));
         }));
+    }
+
+    public getAllProfiles(): Observable<Profile[]> {
+        return this.http.get<any>('/rest/v1/profiles').pipe(
+                map((res: HttpResponse<any>) => res['result']['profiles']),
+                map((profiles: any[]) =>
+                    profiles.map((profile) => new Profile(profile))
+                )
+            )
+    }
+
+    public addNewProfile(p: Profile): Observable<Profile> {
+        return this.http.put('/rest/v1/addresses_profile', p).pipe(
+            map((res: HttpResponse<any>) => new Profile(res['profile']))
+            )
+    }
+
+    public modifyProfile(p: Profile): Observable<Profile> {
+        return this.http.post('/rest/v1/addresses_profile/' + p.id, p).pipe(
+            map((res: HttpResponse<any>) => new Profile(res['profile']))
+            )
     }
 
     public getAllContacts(): Observable<Contact[]> {
