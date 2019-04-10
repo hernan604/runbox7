@@ -18,13 +18,15 @@ import {
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
-import { ProfilesModal } from './profiles.modal';
+import { ProfilesEditPreference } from './profiles.edit.preference';
+import { ProfilesEditAliases } from './profiles.edit.aliases';
 
 @NgModule({
     declarations: [
     ProfilesComponent,
     ProfilesForm,
-    ProfilesModal,
+    ProfilesEditPreference,
+    ProfilesEditAliases,
     ],
     imports: [
     BrowserModule,
