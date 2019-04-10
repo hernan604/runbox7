@@ -54,7 +54,8 @@ import {
   MatSnackBar,
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {ProfilesModal} from './profiles.modal';
+import {ProfilesEditPreference} from './profiles.edit.preference';
+import {ProfilesEditAliases} from './profiles.edit.aliases';
 
 
 @Component({
@@ -74,46 +75,24 @@ import {ProfilesModal} from './profiles.modal';
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <form *ngFor="let item of values; let i = index;">
-
+            TYPE:{{item.profile.reference_type}}
             <mat-divider *ngIf="i > 0"></mat-divider>
-
-            <mat-form-field class="email" style="margin: 10px;">
-
-                <input
-                    *ngIf="item.profile && item.profile.reference_type == 'aliases' && item.reference.virtual_domain && item.reference.localpart && item.reference.virtual_domain.name"
-                    matInput
-                    placeholder="Email"
-                    [value]="item.reference.localpart + '@' + item.reference.virtual_domain.name"
-                >
-
-                <input
-                    *ngIf="item.profile && item.profile.reference_type == 'aliases' && ! item.reference.virtual_domain && item.reference.localpart"
-                    matInput
-                    placeholder="Email"
-                    [value]="item.reference.localpart + '@runbox.*'"
-                >
-
-                <input
-                    *ngIf="item.profile && item.profile.reference_type == 'preference' && item.reference.virtual_domain && item.reference.email && item.reference.virtual_domain.name"
-                    matInput
-                    placeholder="Email"
-                    [value]="item.reference.email + '@' + item.reference.virtual_domain.name"
-                >
-
-                <input
-                    *ngIf="item.profile && item.profile.reference_type == 'preference' && ! item.reference.virtual_domain && item.reference.email"
-                    matInput
-                    placeholder="Email"
-                    [value]="item.reference.email"
-                >
-
-            </mat-form-field>
 
             <mat-form-field class="from" style="margin: 10px;">
                 <input
                     matInput
-                    placeholder="From Name"
-                    [value]="( item && item.reference && item.profile.name ) || ''"
+                    placeholder="Name"
+                    readonly="true"
+                    [value]="item.profile.name || ''"
+                >
+            </mat-form-field>
+
+            <mat-form-field class="email" style="margin: 10px;">
+                <input
+                    matInput
+                    placeholder="Email"
+                    readonly="true"
+                    [value]="item.profile.email"
                 >
             </mat-form-field>
 
@@ -121,14 +100,15 @@ import {ProfilesModal} from './profiles.modal';
                 <input
                     matInput 
                     placeholder="Reply-to"
-                    [value]="( item && item.reference && item.reference.reply_to ) || ''"
+                    readonly="true"
+                    [value]="item.profile.reply_to || ''"
                 >
             </mat-form-field>
 
             <div>
                 <mat-label>Signature</mat-label>
                 <div
-                    [innerHTML]="( item && item.reference && item.reference.signature ) || ''"
+                    [innerHTML]="item.profile.signature || ''"
                     style="width: 180px;"
                 ></div>
             </div>
@@ -159,28 +139,46 @@ import {ProfilesModal} from './profiles.modal';
         `
 })
 export class ProfilesForm {
-    @Input() values: any[];
-    @Input() is_delete_disabled: false;
-    //@Output() save: EventEmitter<number> = new EventEmitter<number>();
-    //onClick(anIndex) {
-    //  alert("SAVE")
-    //  this.delete.emit(anIndex);
-    //  this.images.splice(anIndex, 1);
-    //}
-    constructor(public dialog: MatDialog) {}
-    edit (item): void {
-        console.log("CLICK", item)
-        const dialog_ref = this.dialog.open(ProfilesModal, {
-            width: '300px',
-            data: item
-        });
-        dialog_ref.afterClosed().subscribe(result => {
-            console.log('Dialog Close !', result)
-            item = result;
-        });
-    }
-    delete (i, item) {
-        console.log("delete", i, item)
-    }
+  @Input() values: any[];
+  @Input() is_delete_disabled: false;
+  //@Output() save: EventEmitter<number> = new EventEmitter<number>();
+  //onClick(anIndex) {
+  //  alert("SAVE")
+  //  this.delete.emit(anIndex);
+  //  this.images.splice(anIndex, 1);
+  //}
+  private dialog_ref : any;
+  constructor(public dialog: MatDialog,
+    public snackBar: MatSnackBar,
+  ) {}
+  edit (item): void {
+      console.log("CLICK", item)
+      if ( item.profile.reference_type == 'aliases' ) {
+          this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
+              width: '300px',
+              data: item
+          });
+      } else if ( item.profile.reference_type == 'preference' ) {
+          this.dialog_ref = this.dialog.open(ProfilesEditPreference, {
+              width: '300px',
+              data: item
+          });
+      } else {
+          this.show_error('Reference type unknown', 'Dismiss');
+      }
+
+      this.dialog_ref.afterClosed().subscribe(result => {
+          console.log('Dialog Close !', result)
+          item = result;
+      });
+  }
+  delete (i, item) {
+      console.log("delete", i, item)
+  }
+  show_error (message, action) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  };
 }
 
