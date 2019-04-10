@@ -43,7 +43,8 @@ import {
   MatTooltipModule,
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
-import { ProfilesModal } from './profiles/profiles.modal';
+import { ProfilesEditAliases } from './profiles/profiles.edit.aliases';
+import { ProfilesEditPreference } from './profiles/profiles.edit.preference';
 import { CanvasTableModule } from './canvastable/canvastable';
 import { MoveMessageDialogComponent } from './actions/movemessage.action';
 import { RunboxWebmailAPI } from './rmmapi/rbwebmail';
@@ -144,7 +145,10 @@ const routes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: RMMHttpInterceptorService, multi: true}
   ],
   bootstrap: [MainContainerComponent],
-  entryComponents: [MoveMessageDialogComponent, ProfilesModal,]
+  entryComponents: [MoveMessageDialogComponent,
+    ProfilesEditAliases,
+    ProfilesEditPreference,
+  ]
 })
 export class AppModule { }
 
