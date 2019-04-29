@@ -55,6 +55,7 @@ import {
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {ProfilesEditPreference} from './profiles.edit.preference';
+import {ProfilesEditMain} from './profiles.edit.main';
 import {ProfilesEditAliases} from './profiles.edit.aliases';
 
 
@@ -75,7 +76,6 @@ import {ProfilesEditAliases} from './profiles.edit.aliases';
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <form *ngFor="let item of values; let i = index;">
-            TYPE:{{item.profile.reference_type}}
             <mat-divider *ngIf="i > 0"></mat-divider>
 
             <mat-form-field class="from" style="margin: 10px;">
@@ -153,13 +153,18 @@ export class ProfilesForm {
   ) {}
   edit (item): void {
       console.log("CLICK", item)
-      if ( item.profile.reference_type == 'aliases' ) {
+      if ( item.profile.type == 'aliases' ) {
           this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
               width: '300px',
               data: item
           });
-      } else if ( item.profile.reference_type == 'preference' ) {
+      } else if ( item.profile.type.match(/^preference$/) ) {
           this.dialog_ref = this.dialog.open(ProfilesEditPreference, {
+              width: '300px',
+              data: item
+          });
+      } else if ( item.profile.type.match(/^main$/) ) {
+          this.dialog_ref = this.dialog.open(ProfilesEditMain, {
               width: '300px',
               data: item
           });
