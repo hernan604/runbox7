@@ -73,7 +73,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                 <mat-form-field style="margin: 10px;">
                     <input matInput placeholder="From"
                         name="from"
-                        [(ngModel)]="data.profile.from"
+                        [(ngModel)]="data.profile.from_name"
                     >
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
