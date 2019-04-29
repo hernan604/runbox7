@@ -19,6 +19,7 @@ import {
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
 import { ProfilesEditPreference } from './profiles.edit.preference';
+import { ProfilesEditMain } from './profiles.edit.main';
 import { ProfilesEditAliases } from './profiles.edit.aliases';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { ProfilesEditAliases } from './profiles.edit.aliases';
     ProfilesComponent,
     ProfilesForm,
     ProfilesEditPreference,
+    ProfilesEditMain,
     ProfilesEditAliases,
     ],
     imports: [
