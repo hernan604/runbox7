@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Runbox 7. If not, see <https://www.gnu.org/licenses/>.
 // ---------- END RUNBOX LICENSE ----------
+import { timeout } from 'rxjs/operators';
 import { 
   SecurityContext, 
   Component, 
@@ -30,6 +31,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
+  Http,
   HttpModule, 
   JsonpModule, 
   XHRBackend, 
@@ -67,33 +69,79 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                     <input matInput placeholder="Name" 
                         name="name"
                         [(ngModel)]="data.profile.name"
+                        (ngModelChange)="onchange_field('name')"
                     >
+                    <div *ngIf="field_errors.name">
+                        <mat-hint>
+                            ie. My main profile
+                        </mat-hint>
+                        <mat-error *ngFor="let error of field_errors.name; let i = index;">
+                            {{error}}
+                        </mat-error>
+                    </div>
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
-
                     <input matInput placeholder="Email" 
                         name="email"
                         readonly
                         [(ngModel)]="data.profile.email"
+                        (ngModelChange)="onchange_field('email')"
                     >
+                    <div *ngIf="field_errors.email">
+                        <mat-hint>
+                            ie. jamesbond@runbox.com
+                        </mat-hint>
+                        <mat-error *ngFor="let error of field_errors.email; let i = index;">
+                            {{error}}
+                        </mat-error>
+                    </div>
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
                     <input matInput placeholder="From"
                         name="from"
                         [(ngModel)]="data.profile.from_name"
+                        (ngModelChange)="onchange_field('from_name')"
                     >
+                    <div *ngIf="field_errors.from_name">
+                        <mat-hint>
+                            ie. James Bond
+                        </mat-hint>
+                        <mat-error *ngFor="let error of field_errors.from_name; let i = index;">
+                            {{error}}
+                        </mat-error>
+                    </div>
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
                     <input matInput placeholder="Reply-to"
                         name="reply_to"
                         [(ngModel)]="data.profile.reply_to"
+                        (ngModelChange)="onchange_field('reply_to')"
                     >
+                    <div *ngIf="field_errors.reply_to">
+                        <mat-hint>ie. jamesbond-noreply@runbox.com</mat-hint>
+                        <mat-error *ngFor="let error of field_errors.reply_to; let i = index;">
+                            {{error}}
+                        </mat-error>
+                    </div>
                 </mat-form-field>
                 <mat-form-field style="margin: 10px;">
                     <input matInput placeholder="Signature"
                         name="signature"
                         [(ngModel)]="data.profile.signature"
+                        (ngModelChange)="onchange_field('signature')"
                     >
+                    <div *ngIf="field_errors.signature">
+                        <mat-hint>
+                            ie. 
+                            <br>Mr. James Bond
+                            <br>--------------
+                            <br>
+                            <br>"My name is Bond, James Bond"
+                        </mat-hint>
+                        <mat-error *ngFor="let error of field_errors.signature; let i = index;">
+                            {{error}}
+                        </mat-error>
+                    </div>
                 </mat-form-field>
             </form>
         </div>
@@ -108,7 +156,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 
 export class ProfilesEditMain {
     @Input() value: any[];
+    field_errors = {};
     constructor(
+        private http: Http,
+        public snackBar: MatSnackBar,
         public dialog_ref: MatDialogRef<ProfilesEditMain>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
@@ -116,10 +167,41 @@ export class ProfilesEditMain {
     }
     save(data) {
         console.log('SAVE', this.data);
-        this.close();
+        this.http.put('/rest/v1/profile/'+this.data.profile.id, this.data.profile)
+        .pipe(timeout(60000))
+        .subscribe(
+          data => {
+            const reply = data.json();
+            if ( reply.status == 'error' ) {
+                if ( reply.field_errors ) {
+                    this.field_errors = reply.field_errors;
+                }
+                if ( reply.errors ) {
+                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
+                }
+                return;
+            }
+            this.close();
+            console.log('profiles', reply)
+            return;
+          },
+          error => {
+            return this.show_error('Could not load profiles.', 'Dismiss');
+          }
+        );
     }
     close() {
         this.dialog_ref.close({});
+    }
+    show_error (message, action) {
+      this.snackBar.open(message, action, {
+        duration: 2000,
+      });
+    };
+    onchange_field ( field ) {
+        if ( this.field_errors[field] ) {
+            this.field_errors[field] = [];
+        }
     }
 }
 
