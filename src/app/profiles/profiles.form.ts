@@ -141,12 +141,6 @@ import {ProfilesEditAliases} from './profiles.edit.aliases';
 export class ProfilesForm {
   @Input() values: any[];
   @Input() is_delete_disabled: false;
-  //@Output() save: EventEmitter<number> = new EventEmitter<number>();
-  //onClick(anIndex) {
-  //  alert("SAVE")
-  //  this.delete.emit(anIndex);
-  //  this.images.splice(anIndex, 1);
-  //}
   private dialog_ref : any;
   constructor(public dialog: MatDialog,
     public snackBar: MatSnackBar,
@@ -155,17 +149,17 @@ export class ProfilesForm {
       console.log("CLICK", item)
       if ( item.profile.type == 'aliases' ) {
           this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
-              width: '300px',
+              width: '600px',
               data: item
           });
       } else if ( item.profile.type.match(/^preference$/) ) {
           this.dialog_ref = this.dialog.open(ProfilesEditPreference, {
-              width: '300px',
+              width: '600px',
               data: item
           });
       } else if ( item.profile.type.match(/^main$/) ) {
           this.dialog_ref = this.dialog.open(ProfilesEditMain, {
-              width: '300px',
+              width: '600px',
               data: item
           });
       } else {
