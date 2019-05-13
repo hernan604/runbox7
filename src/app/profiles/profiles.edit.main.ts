@@ -71,7 +71,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                         [(ngModel)]="data.profile.name"
                         (ngModelChange)="onchange_field('name')"
                     >
-                    <div *ngIf="field_errors.name">
+                    <div *ngIf="field_errors && field_errors.name">
                         <mat-hint>
                             ie. My main profile
                         </mat-hint>
@@ -87,7 +87,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                         [(ngModel)]="data.profile.email"
                         (ngModelChange)="onchange_field('email')"
                     >
-                    <div *ngIf="field_errors.email">
+                    <div *ngIf="field_errors && field_errors.email">
                         <mat-hint>
                             ie. jamesbond@runbox.com
                         </mat-hint>
@@ -102,7 +102,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                         [(ngModel)]="data.profile.from_name"
                         (ngModelChange)="onchange_field('from_name')"
                     >
-                    <div *ngIf="field_errors.from_name">
+                    <div *ngIf="field_errors && field_errors.from_name">
                         <mat-hint>
                             ie. James Bond
                         </mat-hint>
@@ -117,7 +117,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                         [(ngModel)]="data.profile.reply_to"
                         (ngModelChange)="onchange_field('reply_to')"
                     >
-                    <div *ngIf="field_errors.reply_to">
+                    <div *ngIf="field_errors && field_errors.reply_to">
                         <mat-hint>ie. jamesbond-noreply@runbox.com</mat-hint>
                         <mat-error *ngFor="let error of field_errors.reply_to; let i = index;">
                             {{error}}
@@ -130,11 +130,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
                         [(ngModel)]="data.profile.signature"
                         (ngModelChange)="onchange_field('signature')"
                     >
-                    <div *ngIf="field_errors.signature">
+                    <div *ngIf="field_errors && field_errors.signature">
                         <mat-hint>
                             ie. 
                             <br>Mr. James Bond
-                            <br>--------------
+                            <br>=-=-=
                             <br>
                             <br>"My name is Bond, James Bond"
                         </mat-hint>
@@ -156,7 +156,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 
 export class ProfilesEditMain {
     @Input() value: any[];
-    field_errors = {};
+    field_errors;
     constructor(
         private http: Http,
         public snackBar: MatSnackBar,
