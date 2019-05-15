@@ -119,7 +119,7 @@ import {ProfilesEditAliases} from './profiles.edit.aliases';
                 mat-raised-button 
                 style="margin: 10px;"
             >
-                EDIT
+                Edit
             </button>
 
             <button 
@@ -146,24 +146,16 @@ export class ProfilesForm {
     public snackBar: MatSnackBar,
   ) {}
   edit (item): void {
-      console.log("CLICK", item)
-      if ( item.profile.type == 'aliases' ) {
+      if ( item.profile.reference_type == 'aliases' ) {
           this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
               width: '600px',
               data: item
           });
-      } else if ( item.profile.type.match(/^preference$/) ) {
-          this.dialog_ref = this.dialog.open(ProfilesEditPreference, {
-              width: '600px',
-              data: item
-          });
-      } else if ( item.profile.type.match(/^main$/) ) {
+      } else {
           this.dialog_ref = this.dialog.open(ProfilesEditMain, {
               width: '600px',
               data: item
           });
-      } else {
-          this.show_error('Reference type unknown', 'Dismiss');
       }
 
       this.dialog_ref.afterClosed().subscribe(result => {

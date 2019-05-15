@@ -10,6 +10,7 @@ import {
     MatButtonModule,
     MatIconModule,
     MatListModule,
+    MatSelectModule,
     MatSidenavModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -18,12 +19,14 @@ import {
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
+import { AliasesForm } from './aliases.form';
 import { ProfilesEditPreference } from './profiles.edit.preference';
 import { ProfilesEditMain } from './profiles.edit.main';
 import { ProfilesEditAliases } from './profiles.edit.aliases';
 
 @NgModule({
     declarations: [
+    AliasesForm,
     ProfilesComponent,
     ProfilesForm,
     ProfilesEditPreference,
@@ -38,6 +41,7 @@ import { ProfilesEditAliases } from './profiles.edit.aliases';
     MatButtonModule,
     MatIconModule,
     MatListModule,
+    MatSelectModule,
     MatSidenavModule,
     MatToolbarModule,
     MatTooltipModule,
