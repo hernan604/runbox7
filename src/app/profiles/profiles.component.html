@@ -22,9 +22,9 @@
                     </div>
                 </profiles-form>
                 <mat-divider></mat-divider>
-                <profiles-form
-                    *ngIf="profiles && profiles.hasOwnProperty('aliases')"
-                    [values]="profiles.aliases"
+                <aliases-form
+                    *ngIf="aliases && aliases.length"
+                    [values]="aliases"
                 >
                     <div section-header>
                         <h2>
@@ -41,11 +41,12 @@
                             mat-raised-button 
                             color='primary'
                             style="margin: 10px;"
+                            (click)='add_alias()'
                         >
                             Add Alias
                         </button>
                     </div>
-                </profiles-form>
+                </aliases-form>
                 <mat-divider></mat-divider>
                 <profiles-form
                     *ngIf="profiles && profiles.hasOwnProperty('external_email')"
