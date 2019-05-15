@@ -47,7 +47,9 @@ import {
 } from '@angular/material';
 
 import {MatFormFieldModule} from '@angular/material/form-field'; 
+import {AliasesForm} from './aliases.form';
 import {ProfilesForm} from './profiles.form';
+import {ProfilesEditAliases} from './profiles.edit.aliases';
 
 @Component({
   moduleId: 'angular2/app/profiles/',
@@ -62,6 +64,8 @@ export class ProfilesComponent implements AfterViewInit {
   @Output() onClose: EventEmitter<string> = new EventEmitter();
   domain;
   profiles = {};
+  aliases = [];
+  dialog_ref : any;
 
   ngAfterViewInit() {
   }
@@ -69,9 +73,32 @@ export class ProfilesComponent implements AfterViewInit {
   constructor(
     private http: Http,
     public snackBar: MatSnackBar,
+    public dialog: MatDialog,
   ) {
     this.load_profiles();
+    this.load_aliases();
   }
+
+  load_aliases () {
+    this.http.get('/rest/v1/aliases', {
+    })
+    .pipe(timeout(60000))
+    .subscribe(
+      data => {
+        const reply = data.json();
+        if ( reply.status == 'error' ) {
+          this.show_error( reply.error.join( '' ), 'Dismiss' )
+        }
+        console.log('aliases', reply)
+        this.aliases = reply.result.aliases;
+        return;
+      },
+      error => {
+        return this.show_error('Could not load aliases.', 'Dismiss');
+      }
+    );
+  }
+
 
   load_profiles () {
     this.http.get('/rest/v1/profiles', {
@@ -98,4 +125,20 @@ export class ProfilesComponent implements AfterViewInit {
       duration: 2000,
     });
   };
+
+  add_alias (): void {
+      let item = {
+
+      };
+      this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
+          width: '600px',
+          data: item
+      });
+
+      this.dialog_ref.afterClosed().subscribe(result => {
+          this.load_aliases();
+          console.log('Dialog Close !', result)
+          item = result;
+      });
+  }
 }
