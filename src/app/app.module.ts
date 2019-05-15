@@ -41,6 +41,7 @@ import {
   MatDialogModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatSelectModule,
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
 import { ProfilesEditAliases } from './profiles/profiles.edit.aliases';
@@ -121,6 +122,7 @@ const routes: Routes = [
     MatButtonModule,
     MatButtonToggleModule,
     MatProgressBarModule,
+    MatSelectModule,
     MatSidenavModule,
     BrowserAnimationsModule,
     LocalSearchIndexModule,
