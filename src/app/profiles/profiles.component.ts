@@ -49,7 +49,8 @@ import {
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {AliasesForm} from './aliases.form';
 import {ProfilesForm} from './profiles.form';
-import {ProfilesEditAliases} from './profiles.edit.aliases';
+import {ProfilesEdit} from './profiles.edit';
+import {AliasesEdit} from '../aliases/edit';
 
 @Component({
   moduleId: 'angular2/app/profiles/',
@@ -65,9 +66,16 @@ export class ProfilesComponent implements AfterViewInit {
   domain;
   profiles = {};
   aliases = [];
+  aliases_counter = {};
+  aliases_unique = [];
   dialog_ref : any;
 
   ngAfterViewInit() {
+  }
+
+  ev_reload_emiter (ev) {
+    this.load_aliases();
+    this.load_profiles();
   }
 
   constructor(
@@ -89,8 +97,16 @@ export class ProfilesComponent implements AfterViewInit {
         if ( reply.status == 'error' ) {
           this.show_error( reply.error.join( '' ), 'Dismiss' )
         }
-        console.log('aliases', reply)
         this.aliases = reply.result.aliases;
+        let _unique = {};
+        for ( let value of this.aliases ) {
+            _unique[value.localpart+'@'+value.domain]=1
+        }
+        this.aliases_unique = Object.keys(_unique);
+        this.aliases_counter = {
+            total : reply.result.counter.total,
+            current : reply.result.counter.current,
+        };
         return;
       },
       error => {
@@ -110,7 +126,6 @@ export class ProfilesComponent implements AfterViewInit {
         if ( reply.status == 'error' ) {
           this.show_error( reply.error.join( '' ), 'Dismiss' )
         }
-        console.log('profiles', reply)
         this.profiles = reply.result;
         return;
       },
@@ -127,18 +142,33 @@ export class ProfilesComponent implements AfterViewInit {
   };
 
   add_alias (): void {
-      let item = {
+      let item = {};
 
-      };
-      this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
+      this.dialog_ref = this.dialog.open(AliasesEdit, {
           width: '600px',
           data: item
       });
+      this.dialog_ref.componentInstance.is_create = true;
 
       this.dialog_ref.afterClosed().subscribe(result => {
           this.load_aliases();
-          console.log('Dialog Close !', result)
           item = result;
       });
+  }
+
+  add_profile (): void {
+    let item = {}
+
+    this.dialog_ref = this.dialog.open(ProfilesEdit, {
+        width: '600px',
+        data: item
+    });
+    this.dialog_ref.componentInstance.aliases_unique = this.aliases_unique;
+    this.dialog_ref.componentInstance.is_create = true;
+    
+    this.dialog_ref.afterClosed().subscribe(result => {
+        this.load_profiles();
+        item = result;
+    });
   }
 }
