@@ -44,9 +44,8 @@ import {
   MatSelectModule,
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
-import { ProfilesEditAliases } from './profiles/profiles.edit.aliases';
-import { ProfilesEditMain } from './profiles/profiles.edit.main';
-import { ProfilesEditPreference } from './profiles/profiles.edit.preference';
+import { ProfilesEdit } from './profiles/profiles.edit';
+import { AliasesEdit } from './aliases/edit';
 import { CanvasTableModule } from './canvastable/canvastable';
 import { MoveMessageDialogComponent } from './actions/movemessage.action';
 import { RunboxWebmailAPI } from './rmmapi/rbwebmail';
@@ -149,9 +148,8 @@ const routes: Routes = [
   ],
   bootstrap: [MainContainerComponent],
   entryComponents: [MoveMessageDialogComponent,
-    ProfilesEditAliases,
-    ProfilesEditMain,
-    ProfilesEditPreference,
+    ProfilesEdit,
+    AliasesEdit,
   ]
 })
 export class AppModule { }
