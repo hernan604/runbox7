@@ -9,6 +9,7 @@
                     *ngIf="profiles && profiles.hasOwnProperty('main')"
                     [values]="profiles.main"
                     is_delete_disabled="true"
+                    (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
                         <h2>
@@ -25,6 +26,7 @@
                 <aliases-form
                     *ngIf="aliases && aliases.length"
                     [values]="aliases"
+                    (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
                         <h2>
@@ -45,16 +47,18 @@
                         >
                             Add Alias
                         </button>
+                        {{aliases_counter.current}} of {{aliases_counter.total}} available aliases created
                     </div>
                 </aliases-form>
                 <mat-divider></mat-divider>
                 <profiles-form
-                    *ngIf="profiles && profiles.hasOwnProperty('external_email')"
-                    [values]="profiles.external_email"
+                    *ngIf="profiles && profiles.hasOwnProperty('others')"
+                    [values]="profiles.others"
+                    (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
                         <h2>
-                            External email addresses
+                            Other identities
                         </h2>
                     </div>
                     <div section-description>
@@ -67,6 +71,7 @@
                             mat-raised-button
                             color='primary'
                             style="margin: 10px;"
+                            (click)='add_profile()'
                         >
                             Add Email
                         </button>
