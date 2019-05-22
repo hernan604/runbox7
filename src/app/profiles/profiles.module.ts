@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material';
 
 import {
     MatButtonModule,
+    MatCardModule,
     MatIconModule,
     MatListModule,
     MatSelectModule,
@@ -17,21 +18,24 @@ import {
     MatTableModule
 } from '@angular/material';
 
+import {
+    MatMenuModule,
+} from '@angular/material/menu';
+
+
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
 import { AliasesForm } from './aliases.form';
-import { ProfilesEditPreference } from './profiles.edit.preference';
-import { ProfilesEditMain } from './profiles.edit.main';
-import { ProfilesEditAliases } from './profiles.edit.aliases';
+import { ProfilesEdit } from './profiles.edit';
+import { AliasesEdit } from '../aliases/edit';
 
 @NgModule({
     declarations: [
     AliasesForm,
     ProfilesComponent,
     ProfilesForm,
-    ProfilesEditPreference,
-    ProfilesEditMain,
-    ProfilesEditAliases,
+    ProfilesEdit,
+    AliasesEdit,
     ],
     imports: [
     BrowserModule,
@@ -39,6 +43,8 @@ import { ProfilesEditAliases } from './profiles.edit.aliases';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
     MatIconModule,
     MatListModule,
     MatSelectModule,
