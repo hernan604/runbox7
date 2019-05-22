@@ -39,6 +39,7 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatDialogModule,
+  MatExpansionModule,
   MatInputModule,
   MatListModule,
   MatPaginatorModule,
@@ -54,14 +55,17 @@ import {
   MatSnackBar,
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {ProfilesEditPreference} from './profiles.edit.preference';
-import {ProfilesEditMain} from './profiles.edit.main';
-import {ProfilesEditAliases} from './profiles.edit.aliases';
+import {ProfilesEdit} from './profiles.edit';
+import {AliasesEdit} from '../aliases/edit';
 
 
 @Component({
     selector: 'profiles-form',
     styles: [`
+        .profile-form {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
         .profile-form form > div {
             display: inline-block;
             position: relative;
@@ -70,70 +74,67 @@ import {ProfilesEditAliases} from './profiles.edit.aliases';
         .profile-form form > div > div {
             overflow: scroll;
         }
+        .profile-form-item {
+            cursor: pointer;
+        }
+        .header-image {
+           border-radius: 50%;
+           flex-shrink: 0;
+           background-image:url(/_img/avatar.svg);
+           background-size: cover;
+        }
     `],
     template: `
     <div class="profile-form">
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
-        <form *ngFor="let item of values; let i = index;">
-            <mat-divider *ngIf="i > 0"></mat-divider>
-
-            <mat-form-field class="from" style="margin: 10px;">
-                <input
-                    matInput
-                    placeholder="Name"
-                    readonly="true"
-                    [value]="item.profile.name || ''"
-                >
-            </mat-form-field>
-
-            <mat-form-field class="email" style="margin: 10px;">
-                <input
-                    matInput
-                    placeholder="Email"
-                    readonly="true"
-                    [value]="item.profile.email"
-                >
-            </mat-form-field>
-
-            <mat-form-field class="reply_to" style="margin: 10px;">
-                <input
-                    matInput 
-                    placeholder="Reply-to"
-                    readonly="true"
-                    [value]="item.profile.reply_to || ''"
-                >
-            </mat-form-field>
-
-            <div>
-                <mat-label>Signature</mat-label>
-                <div
-                    [innerHTML]="item.profile.signature || ''"
-                    style="width: 180px;"
-                ></div>
-            </div>
-
-            <button 
-                (click)="edit(item)" 
-                color='primary' 
-                mat-raised-button 
-                style="margin: 10px;"
-            >
-                Edit
-            </button>
-
-            <button 
-                (click)="delete(i, item)"
-                *ngIf="!is_delete_disabled"
-                color='primary' 
-                mat-raised-button
-                style="margin: 10px;"
-            >
-                Delete
-            </button>
-
-        </form>
         <ng-content select="[section-buttons]"></ng-content>
+        <div *ngFor="let item of values; let i = index;" class='profile-form-item'>
+            <mat-divider *ngIf="i > 0"></mat-divider>
+              <div>
+                <mat-card class="mat_card" style="">
+                  <mat-card-header class="mat_header" >
+                      <div mat-card-avatar class="header-image" >
+                      </div>
+                      <mat-card-title>
+                        {{item.profile.email}} {{item.profile.name?'('+item.profile.name+')':''}}
+                      </mat-card-title>
+                      <mat-card-subtitle>
+                        <div>From name: <strong>{{item.profile.from_name}}</strong></div>
+                        <div>Reply to: <strong>{{item.profile.reply_to}}</strong></div>
+                        <div *ngIf="item.profile.signature">
+                        Signature:
+                            <div [innerHTML]="item.profile.signature"></div>
+                        </div>
+                        <div
+                            *ngIf="!item.profile.signature"
+                        >No signature found</div>
+                        <div>
+                          <button 
+                              (click)="edit(item)" 
+                              color='primary' 
+                              mat-raised-button 
+                              style='margin-right: 20px;'
+                          >
+                              Edit
+                          </button>
+
+                          <button 
+                              (click)="delete(i, item)"
+                              *ngIf="!is_delete_disabled"
+                              color='primary' 
+                              mat-raised-button
+                              style='margin-right: 20px;'
+                          >
+                              Delete
+                          </button>
+                        </div>
+                      </mat-card-subtitle>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            <mat-divider [vertical]="true"></mat-divider>
+        </div>
     </div>
 
         `
@@ -141,30 +142,37 @@ import {ProfilesEditAliases} from './profiles.edit.aliases';
 export class ProfilesForm {
   @Input() values: any[];
   @Input() is_delete_disabled: false;
+  @Output() ev_reload = new EventEmitter<string>();
   private dialog_ref : any;
   constructor(public dialog: MatDialog,
     public snackBar: MatSnackBar,
   ) {}
   edit (item): void {
-      if ( item.profile.reference_type == 'aliases' ) {
-          this.dialog_ref = this.dialog.open(ProfilesEditAliases, {
-              width: '600px',
-              data: item
-          });
-      } else {
-          this.dialog_ref = this.dialog.open(ProfilesEditMain, {
-              width: '600px',
-              data: item
-          });
-      }
+      item = JSON.parse(JSON.stringify(item))
+      this.dialog_ref = this.dialog.open(ProfilesEdit, {
+          width: '600px',
+          data: item
+      });
 
+      this.dialog_ref.componentInstance.is_update = true;
       this.dialog_ref.afterClosed().subscribe(result => {
           console.log('Dialog Close !', result)
+          this.ev_reload.emit('updated');
           item = result;
       });
   }
   delete (i, item) {
       console.log("delete", i, item)
+      this.dialog_ref = this.dialog.open(ProfilesEdit, {
+          width: '600px',
+          data: item,
+      });
+      this.dialog_ref.componentInstance.is_delete = true;
+      this.dialog_ref.afterClosed().subscribe(result => {
+          if ( this.dialog_ref.componentInstance.has_deleted ) {
+              this.ev_reload.emit('deleted');
+          }
+      });
   }
   show_error (message, action) {
     this.snackBar.open(message, action, {
