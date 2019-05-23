@@ -70,10 +70,13 @@ import {MatSelectModule} from '@angular/material';
             background-color: #013b69;
          }
         .header-image {
-           border-radius: 50%;
-           flex-shrink: 0;
-           background-image:url(/_img/avatar.svg);
-           background-size: cover;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-image:url(/_img/avatar.svg);
+            background-size: cover;
+        }
+        .modal_menu {
+            margin-right: 10px;
         }
     `],
     template: `
@@ -84,13 +87,22 @@ import {MatSelectModule} from '@angular/material';
             <mat-card-title >
                 <div *ngIf="is_create" style="color: #FFF;">Create profile</div>
                 <div *ngIf="is_update" style="color: #FFF;">Edit profile</div>
-                <div *ngIf="is_delete" style="color: #000;">Delete profile <strong>{{data.profile.name}}</strong> ?</div>
             </mat-card-title>
             <mat-card-subtitle style="color: #FFF;">
                 <div *ngIf="is_update" style="color: #FFF;">{{data.profile.name}}</div>
-                <div *ngIf="is_delete" style="color: #000;">{{data.profile.name}}</div>
             </mat-card-subtitle>
-            <span flex></span>
+            <mat-divider [vertical]="true" style='border-color: transparent; flex: max-content;'></mat-divider>
+
+            <button *ngIf="is_update && data.profile.type != 'main'" mat-icon-button [matMenuTriggerFor]="modal_menu" class='modal_menu'>
+              <mat-icon color="warn">more_vert</mat-icon>
+            </button>
+            <mat-menu #modal_menu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="delete()">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+
           </mat-card-header>
           <mat-card-content>
                 <div mat-dialog-content>
@@ -178,8 +190,7 @@ import {MatSelectModule} from '@angular/material';
                 </div>
           </mat-card-content>
           <mat-card-actions style="padding: 0px 10px">
-            <button mat-raised-button (click)="save()" color="primary"  *ngIf="!is_delete">SAVE</button>
-            <button mat-raised-button (click)="delete()" color="" *ngIf="is_delete">DELETE</button>
+            <button mat-raised-button (click)="save()" color="primary">SAVE</button>
             <button mat-raised-button (click)="close()" color="warn">CANCEL</button>
           </mat-card-actions>
           <mat-card-footer>
