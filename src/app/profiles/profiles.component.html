@@ -8,7 +8,6 @@
                 <profiles-form
                     *ngIf="profiles && profiles.hasOwnProperty('main')"
                     [values]="profiles.main"
-                    is_delete_disabled="true"
                     (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
