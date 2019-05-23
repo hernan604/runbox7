@@ -15,13 +15,9 @@ import {
     MatSidenavModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatMenuModule,
     MatTableModule
 } from '@angular/material';
-
-import {
-    MatMenuModule,
-} from '@angular/material/menu';
-
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesForm } from './profiles.form';
