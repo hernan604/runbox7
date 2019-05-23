@@ -77,11 +77,20 @@ import {AliasesEdit} from '../aliases/edit';
         .profile-form-item {
             cursor: pointer;
         }
+        .profile-form-item:hover {
+            background-color: #eee;
+        }
+        .profile-form-item:active {
+            background-color: #CCC;
+        }
         .header-image {
-           border-radius: 50%;
-           flex-shrink: 0;
-           background-image:url(/_img/avatar.svg);
-           background-size: cover;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-image:url(/_img/avatar.svg);
+            background-size: cover;
+        }
+        .mat_header {
+            align-items: center
         }
     `],
     template: `
@@ -89,7 +98,7 @@ import {AliasesEdit} from '../aliases/edit';
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <ng-content select="[section-buttons]"></ng-content>
-        <div *ngFor="let item of values; let i = index;" class='profile-form-item'>
+        <div *ngFor="let item of values; let i = index;" class='profile-form-item' (click)="edit(item)">
             <mat-divider *ngIf="i > 0"></mat-divider>
               <div>
                 <mat-card class="mat_card" style="">
@@ -109,26 +118,6 @@ import {AliasesEdit} from '../aliases/edit';
                         <div
                             *ngIf="!item.profile.signature"
                         >No signature found</div>
-                        <div>
-                          <button 
-                              (click)="edit(item)" 
-                              color='primary' 
-                              mat-raised-button 
-                              style='margin-right: 20px;'
-                          >
-                              Edit
-                          </button>
-
-                          <button 
-                              (click)="delete(i, item)"
-                              *ngIf="!is_delete_disabled"
-                              color='primary' 
-                              mat-raised-button
-                              style='margin-right: 20px;'
-                          >
-                              Delete
-                          </button>
-                        </div>
                       </mat-card-subtitle>
                   </mat-card-header>
                 </mat-card>
@@ -141,7 +130,6 @@ import {AliasesEdit} from '../aliases/edit';
 })
 export class ProfilesForm {
   @Input() values: any[];
-  @Input() is_delete_disabled: false;
   @Output() ev_reload = new EventEmitter<string>();
   private dialog_ref : any;
   constructor(public dialog: MatDialog,
