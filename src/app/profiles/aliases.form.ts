@@ -137,9 +137,9 @@ export class AliasesForm {
           item = result;
       });
       this.dialog_ref.componentInstance.is_update = true;
-      if ( this.dialog_ref.componentInstance.has_created || this.dialog_ref.componentInstance.has_updated ) {
-          this.ev_reload.emit('updated or created');
-      }
+    //if ( this.dialog_ref.componentInstance.has_created || this.dialog_ref.componentInstance.has_updated ) {
+    //    this.ev_reload.emit('updated or created');
+    //}
   }
   delete (i, item) {
     this.dialog_ref = this.dialog.open(AliasesEdit, {
@@ -148,9 +148,9 @@ export class AliasesForm {
     });
     this.dialog_ref.componentInstance.is_delete = true;
     this.dialog_ref.afterClosed().subscribe(result => {
-        if ( this.dialog_ref.componentInstance.has_deleted ) {
-            this.ev_reload.emit('deleted');
-        }
+      //if ( this.dialog_ref.componentInstance.has_deleted ) {
+      //    this.ev_reload.emit('deleted');
+      //}
     });
   }
   show_error (message, action) {
