@@ -53,6 +53,7 @@ import { xapianLoadedSubject } from './xapian/xapianwebloader';
 import { SwPush } from '@angular/service-worker';
 import { exportKeysFromJWK } from './webpush/vapid.tools';
 import { ProgressService } from './http/progress.service';
+import { RMM } from './rmm';
 
 const LOCAL_STORAGE_SETTING_MAILVIEWER_ON_RIGHT_SIDE_IF_MOBILE = 'mailViewerOnRightSideIfMobile';
 
@@ -129,6 +130,7 @@ export class AppComponent implements OnInit, AfterViewInit, CanvasTableSelectLis
 
   constructor(public searchService: SearchService,
     public rmmapi: RunboxWebmailAPI,
+    public rmm: RMM,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
     private router: Router,

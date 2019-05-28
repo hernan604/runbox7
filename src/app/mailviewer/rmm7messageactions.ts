@@ -25,6 +25,7 @@ import { MatDialogRef, MatDialog, MatSnackBar } from '@angular/material';
 import { MessageActions } from './messageactions';
 import { RunboxWebmailAPI } from '../rmmapi/rbwebmail';
 import { ProgressDialog } from '../dialog/dialog.module';
+import { RMM } from '../rmm';
 
 export class RMM7MessageActions implements MessageActions {
     mailViewerComponent: SingleMailViewerComponent;
@@ -33,6 +34,7 @@ export class RMM7MessageActions implements MessageActions {
     searchService: SearchService;
     draftDeskService: DraftDeskService;
     rmmapi: RunboxWebmailAPI;
+    rmm: RMM;
 
     public moveToFolder() {
         const dialogRef = this.dialog.open(MoveMessageDialogComponent);
