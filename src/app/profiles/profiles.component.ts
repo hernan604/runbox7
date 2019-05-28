@@ -51,6 +51,7 @@ import {AliasesForm} from './aliases.form';
 import {ProfilesForm} from './profiles.form';
 import {ProfilesEdit} from './profiles.edit';
 import {AliasesEdit} from '../aliases/edit';
+import { RMM } from '../rmm';
 
 @Component({
   moduleId: 'angular2/app/profiles/',
@@ -61,10 +62,8 @@ import {AliasesEdit} from '../aliases/edit';
 export class ProfilesComponent implements AfterViewInit {
   panelOpenState = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   @Output() onClose: EventEmitter<string> = new EventEmitter();
   domain;
-  profiles = {};
   aliases = [];
   aliases_counter = {};
   aliases_unique = [];
@@ -82,57 +81,18 @@ export class ProfilesComponent implements AfterViewInit {
     private http: Http,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
+    public rmm: RMM,
   ) {
     this.load_profiles();
     this.load_aliases();
   }
 
   load_aliases () {
-    this.http.get('/rest/v1/aliases', {
-    })
-    .pipe(timeout(60000))
-    .subscribe(
-      data => {
-        const reply = data.json();
-        if ( reply.status == 'error' ) {
-          this.show_error( reply.error.join( '' ), 'Dismiss' )
-        }
-        this.aliases = reply.result.aliases;
-        let _unique = {};
-        for ( let value of this.aliases ) {
-            _unique[value.localpart+'@'+value.domain]=1
-        }
-        this.aliases_unique = Object.keys(_unique);
-        this.aliases_counter = {
-            total : reply.result.counter.total,
-            current : reply.result.counter.current,
-        };
-        return;
-      },
-      error => {
-        return this.show_error('Could not load aliases.', 'Dismiss');
-      }
-    );
+    this.rmm.alias.load();
   }
 
-
   load_profiles () {
-    this.http.get('/rest/v1/profiles', {
-    })
-    .pipe(timeout(60000))
-    .subscribe(
-      data => {
-        const reply = data.json();
-        if ( reply.status == 'error' ) {
-          this.show_error( reply.error.join( '' ), 'Dismiss' )
-        }
-        this.profiles = reply.result;
-        return;
-      },
-      error => {
-        return this.show_error('Could not load profiles.', 'Dismiss');
-      }
-    );
+    this.rmm.profile.load();
   }
 
   show_error (message, action) {
