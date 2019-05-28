@@ -22,7 +22,7 @@
                     </div>
                 </profiles-lister>
                 <mat-divider></mat-divider>
-                <aliases-form
+                <aliases-lister
                     *ngIf="rmm.alias.aliases && rmm.alias.aliases.length"
                     [values]="rmm.alias.aliases"
                     (ev_reload)="ev_reload_emiter($event)"
@@ -48,7 +48,7 @@
                         </button>
                         {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
                     </div>
-                </aliases-form>
+                </aliases-lister>
                 <mat-divider></mat-divider>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"

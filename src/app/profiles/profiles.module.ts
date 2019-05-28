@@ -21,13 +21,13 @@ import {
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesLister } from './profiles.lister';
-import { AliasesForm } from './aliases.form';
+import { AliasesLister } from './aliases.lister';
 import { ProfilesEdit } from './profiles.edit';
 import { AliasesEdit } from '../aliases/edit';
 
 @NgModule({
     declarations: [
-    AliasesForm,
+    AliasesLister,
     ProfilesComponent,
     ProfilesLister,
     ProfilesEdit,
