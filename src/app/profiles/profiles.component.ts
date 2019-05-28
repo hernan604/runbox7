@@ -47,7 +47,7 @@ import {
 } from '@angular/material';
 
 import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {AliasesLister} from './aliases.lister';
+import {AliasesLister} from '../aliases/aliases.lister';
 import {ProfilesLister} from './profiles.lister';
 import {ProfilesEditorModal} from './profiles.editor.modal';
 import {AliasesEditorModal} from '../aliases/aliases.editor.modal';

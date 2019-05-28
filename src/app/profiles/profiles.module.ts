@@ -21,7 +21,7 @@ import {
 
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesLister } from './profiles.lister';
-import { AliasesLister } from './aliases.lister';
+import { AliasesLister } from '../aliases/aliases.lister';
 import { ProfilesEditorModal } from './profiles.editor.modal';
 import { AliasesEditorModal } from '../aliases/aliases.editor.modal';
 
