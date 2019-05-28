@@ -50,7 +50,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {AliasesLister} from './aliases.lister';
 import {ProfilesLister} from './profiles.lister';
 import {ProfilesEditorModal} from './profiles.editor.modal';
-import {AliasesEdit} from '../aliases/edit';
+import {AliasesEditorModal} from '../aliases/aliases.editor.modal';
 import { RMM } from '../rmm';
 
 @Component({
@@ -104,7 +104,7 @@ export class ProfilesComponent implements AfterViewInit {
   add_alias (): void {
       let item = {};
 
-      this.dialog_ref = this.dialog.open(AliasesEdit, {
+      this.dialog_ref = this.dialog.open(AliasesEditorModal, {
           width: '600px',
           data: item
       });

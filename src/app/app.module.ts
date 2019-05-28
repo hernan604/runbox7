@@ -45,7 +45,7 @@ import {
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
 import { ProfilesEditorModal } from './profiles/profiles.editor.modal';
-import { AliasesEdit } from './aliases/edit';
+import { AliasesEditorModal } from './aliases/aliases.editor.modal';
 import { CanvasTableModule } from './canvastable/canvastable';
 import { MoveMessageDialogComponent } from './actions/movemessage.action';
 import { RunboxWebmailAPI } from './rmmapi/rbwebmail';
@@ -151,7 +151,7 @@ const routes: Routes = [
   bootstrap: [MainContainerComponent],
   entryComponents: [MoveMessageDialogComponent,
     ProfilesEditorModal,
-    AliasesEdit,
+    AliasesEditorModal,
   ]
 })
 export class AppModule { }
