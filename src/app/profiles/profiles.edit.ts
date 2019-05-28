@@ -59,6 +59,7 @@ import {
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {MatSelectModule} from '@angular/material'; 
+import {RMM} from '../rmm';
 @Component({
     selector: 'profiles-edit',
     styles: [`
@@ -208,10 +209,8 @@ export class ProfilesEdit {
     is_delete =false;
     is_update = false;
     is_create = false;
-    has_deleted = false;
-    has_updated = false;
-    has_created = false;
     constructor(
+        public rmm: RMM,
         private http: Http,
         public snackBar: MatSnackBar,
         public dialog_ref: MatDialogRef<ProfilesEdit>,
@@ -234,53 +233,35 @@ export class ProfilesEdit {
     }
     create(){
         let data = this.data;
-        let req = this.http.post('/rest/v1/profile/', {
+        let values = {
             name       : data.profile.name,
             email      : data.profile.email,
             from_name  : data.profile.from_name,
             reply_to   : data.profile.reply_to,
             signature  : data.profile.signature,
-        })
-        req.pipe(timeout(60000))
+        }
+        let req = this.rmm.profile.create(values, this.field_errors)
         req.subscribe(
           data => {
-            const reply = data.json();
-            if ( reply.status == 'error' ) {
-                if ( reply.field_errors ) {
-                    this.field_errors = reply.field_errors;
-                }
-                if ( reply.errors ) {
-                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
-                }
+            let reply = data.json();
+            if ( reply.status == 'success' ) {
+                this.rmm.profile.load()
+                this.close();
                 return;
             }
-            this.has_created = true;
-            this.close();
-            return;
           },
-          error => {
-            return this.show_error('Could not load profiles.', 'Dismiss');
-          }
         );
     }
     delete(){
         let data = this.data;
-        let req = this.http.delete('/rest/v1/profile/'+data.profile.id);
-        req.pipe(timeout(10000))
+        let req = this.rmm.profile.delete(data.profile.id)
         req.subscribe(data => {
             let reply = data.json()
-            if ( reply.status == 'error' ) {
-                if ( reply.field_errors ) {
-                    this.field_errors = reply.field_errors;
-                }
-                if ( reply.errors ) {
-                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
-                }
+            if ( reply.status == 'success' ) {
+                this.rmm.profile.load()
+                this.close();
                 return;
             }
-            this.has_deleted = true;
-            this.close();
-            return;
         });
     }
     update(){
@@ -292,27 +273,16 @@ export class ProfilesEdit {
             reply_to   : data.profile.reply_to,
             signature  : data.profile.signature,
         }
-        let req = this.http.put('/rest/v1/profile/'+this.data.profile.id, obj)
-        req.pipe(timeout(60000))
+        let req = this.rmm.profile.update(this.data.profile.id, obj, this.field_errors)
         req.subscribe(
           data => {
-            const reply = data.json();
-            if ( reply.status == 'error' ) {
-                if ( reply.field_errors ) {
-                    this.field_errors = reply.field_errors;
-                }
-                if ( reply.errors ) {
-                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
-                }
+            let reply = data.json();
+            if ( reply.status == 'success' ) {
+                this.rmm.profile.load()
+                this.close();
                 return;
             }
-            this.has_updated = true;
-            this.close();
-            return;
           },
-          error => {
-            return this.show_error('Could not load profiles.', 'Dismiss');
-          }
         );
     }
     close() {
