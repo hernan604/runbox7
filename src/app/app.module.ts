@@ -44,7 +44,7 @@ import {
   MatSelectModule,
   MatButtonToggleModule, MatProgressBarModule, MatSidenavModule
 } from '@angular/material';
-import { ProfilesEdit } from './profiles/profiles.edit';
+import { ProfilesEditorModal } from './profiles/profiles.editor.modal';
 import { AliasesEdit } from './aliases/edit';
 import { CanvasTableModule } from './canvastable/canvastable';
 import { MoveMessageDialogComponent } from './actions/movemessage.action';
@@ -150,7 +150,7 @@ const routes: Routes = [
   ],
   bootstrap: [MainContainerComponent],
   entryComponents: [MoveMessageDialogComponent,
-    ProfilesEdit,
+    ProfilesEditorModal,
     AliasesEdit,
   ]
 })

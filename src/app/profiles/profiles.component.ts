@@ -49,7 +49,7 @@ import {
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {AliasesLister} from './aliases.lister';
 import {ProfilesLister} from './profiles.lister';
-import {ProfilesEdit} from './profiles.edit';
+import {ProfilesEditorModal} from './profiles.editor.modal';
 import {AliasesEdit} from '../aliases/edit';
 import { RMM } from '../rmm';
 
@@ -119,7 +119,7 @@ export class ProfilesComponent implements AfterViewInit {
   add_profile (): void {
     let item = {}
 
-    this.dialog_ref = this.dialog.open(ProfilesEdit, {
+    this.dialog_ref = this.dialog.open(ProfilesEditorModal, {
         width: '600px',
         data: item
     });

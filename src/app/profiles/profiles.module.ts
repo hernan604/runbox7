@@ -22,7 +22,7 @@ import {
 import { ProfilesComponent } from './profiles.component';
 import { ProfilesLister } from './profiles.lister';
 import { AliasesLister } from './aliases.lister';
-import { ProfilesEdit } from './profiles.edit';
+import { ProfilesEditorModal } from './profiles.editor.modal';
 import { AliasesEdit } from '../aliases/edit';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { AliasesEdit } from '../aliases/edit';
     AliasesLister,
     ProfilesComponent,
     ProfilesLister,
-    ProfilesEdit,
+    ProfilesEditorModal,
     AliasesEdit,
     ],
     imports: [
