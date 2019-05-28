@@ -6,8 +6,8 @@
             <mat-divider></mat-divider>
             <div>
                 <profiles-form
-                    *ngIf="profiles && profiles.hasOwnProperty('main')"
-                    [values]="profiles.main"
+                    *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('main')"
+                    [values]="rmm.profile.profiles.main"
                     (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
@@ -23,8 +23,8 @@
                 </profiles-form>
                 <mat-divider></mat-divider>
                 <aliases-form
-                    *ngIf="aliases && aliases.length"
-                    [values]="aliases"
+                    *ngIf="rmm.alias.aliases && rmm.alias.aliases.length"
+                    [values]="rmm.alias.aliases"
                     (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
@@ -46,13 +46,13 @@
                         >
                             Add Alias
                         </button>
-                        {{aliases_counter.current}} of {{aliases_counter.total}} available aliases created
+                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
                     </div>
                 </aliases-form>
                 <mat-divider></mat-divider>
                 <profiles-form
-                    *ngIf="profiles && profiles.hasOwnProperty('others')"
-                    [values]="profiles.others"
+                    *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"
+                    [values]="rmm.profile.profiles.others"
                     (ev_reload)="ev_reload_emiter($event)"
                 >
                     <div section-header>
