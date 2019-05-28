@@ -69,6 +69,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { SearchExpressionBuilderModule } from './xapian/search-expression-builder/search-expression-builder.module';
 import { UpdateAlertModule } from './updatealert/updatealert.module';
+import { RMM } from './rmm';
 
 window.addEventListener('dragover', (event) => event.preventDefault());
 window.addEventListener('drop', (event) => event.preventDefault());
@@ -143,6 +144,7 @@ const routes: Routes = [
     { provide: BrowserXhr, useClass: ProgressBrowserXhr, deps: [ProgressService] },
     MessageListService,
     RunboxWebmailAPI,
+    RMM,
     RMMAuthGuardService,
     { provide: HTTP_INTERCEPTORS, useClass: RMMHttpInterceptorService, multi: true}
   ],
