@@ -20,7 +20,7 @@ import {
 } from '@angular/material';
 
 import { ProfilesComponent } from './profiles.component';
-import { ProfilesForm } from './profiles.form';
+import { ProfilesLister } from './profiles.lister';
 import { AliasesForm } from './aliases.form';
 import { ProfilesEdit } from './profiles.edit';
 import { AliasesEdit } from '../aliases/edit';
@@ -29,7 +29,7 @@ import { AliasesEdit } from '../aliases/edit';
     declarations: [
     AliasesForm,
     ProfilesComponent,
-    ProfilesForm,
+    ProfilesLister,
     ProfilesEdit,
     AliasesEdit,
     ],

@@ -5,7 +5,7 @@
             <h1 class="mat-h1">Identities</h1>
             <mat-divider></mat-divider>
             <div>
-                <profiles-form
+                <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('main')"
                     [values]="rmm.profile.profiles.main"
                     (ev_reload)="ev_reload_emiter($event)"
@@ -20,7 +20,7 @@
                             Your Main Identity is the address you signed up for Runbox with, and is your main identity.
                         </h3>
                     </div>
-                </profiles-form>
+                </profiles-lister>
                 <mat-divider></mat-divider>
                 <aliases-form
                     *ngIf="rmm.alias.aliases && rmm.alias.aliases.length"
@@ -50,7 +50,7 @@
                     </div>
                 </aliases-form>
                 <mat-divider></mat-divider>
-                <profiles-form
+                <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"
                     [values]="rmm.profile.profiles.others"
                     (ev_reload)="ev_reload_emiter($event)"
@@ -75,7 +75,7 @@
                             Add Email
                         </button>
                     </div>
-                </profiles-form>
+                </profiles-lister>
             </div>
         </section>
     </mat-sidenav-content>
