@@ -59,6 +59,7 @@ import {
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {MatSelectModule} from '@angular/material'; 
+import {RMM} from '../rmm';
 @Component({
     selector: 'aliases-edit',
     styles: [`
@@ -188,6 +189,7 @@ export class AliasesEdit {
         public dialog_ref: MatDialogRef<AliasesEdit>,
         @Inject(MAT_DIALOG_DATA) 
         public data: any,
+        public rmm: RMM,
     ) {
         this.load_allowed_domains();
     }
@@ -207,9 +209,6 @@ export class AliasesEdit {
             this.allowed_domains = reply.result.allowed_domains;
             return;
           },
-          error => {
-            return this.show_error('Could not load allowed domains.', 'Dismiss');
-          }
         );
     }
     save() {
@@ -218,80 +217,50 @@ export class AliasesEdit {
     }
     create(){
         let data = this.data;
-        let req = this.http.post('/rest/v1/alias/', {
+        let req = this.rmm.alias.create({
             localpart : data.localpart,
             domain : data.domain,
             forward_to : data.forward_to,
-        })
-        req.pipe(timeout(60000))
-        req.subscribe(
-          data => {
-            const reply = data.json();
-            if ( reply.status == 'error' ) {
-                if ( reply.field_errors ) {
-                    this.field_errors = reply.field_errors;
-                }
-                if ( reply.errors ) {
-                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
-                }
-                return;
+        }, this.field_errors)
+        req.subscribe((data)=>{
+            let reply = data.json();
+            if ( reply.status == 'success' ) {
+                this.has_created = true;
+                this.close();
             }
-            this.has_created = true;
-            return this.close();
-          },
-          error => {
-            return this.show_error('Could not load profiles.', 'Dismiss');
-          }
-        );
+        })
     }
     delete() {
         let data = this.data;
-        let req = this.http.delete('/rest/v1/alias/'+data.id)
-        req.pipe(timeout(5000))
+        let req = this.rmm.alias.delete(data.id)
         req.subscribe(data => {
-            const reply = data.json();
+            let reply = data.json();
             if ( reply.status == 'success' ) {
                 this.has_deleted = true;
                 return this.close();
-            } else {
-                this.show_error('Could not delete alias.', 'Dismiss');
             }
         })
     }
     update(){
         let data = this.data;
-        let req = this.http.put('/rest/v1/alias/'+data.id, {
+        let values = {
             forward_to : this.data.forward_to,
-        })
-        req.pipe(timeout(60000))
+        }
+        let req = this.rmm.alias.update(data.id, values, this.field_errors)
         req.subscribe(
           data => {
-            const reply = data.json();
-            if ( reply.status == 'error' ) {
-                if ( reply.field_errors ) {
-                    this.field_errors = reply.field_errors;
-                }
-                if ( reply.errors ) {
-                    this.show_error( reply.errors.join( '' ), 'Dismiss' )
-                }
-                return;
+            let reply = data.json();
+            if ( reply.status == 'success' ) {
+            console.log('aliases has updated !!')
+                this.rmm.alias.load()
+                return this.close();
             }
-            this.has_updated = true;
-            return this.close();
           },
-          error => {
-            return this.show_error('Could not load profiles.', 'Dismiss');
-          }
         );
     }
     close() {
         this.dialog_ref.close({});
     }
-    show_error (message, action) {
-      this.snackBar.open(message, action, {
-        duration: 2000,
-      });
-    };
     onchange_field ( field ) {
         if ( this.field_errors && this.field_errors[field] ) {
             this.field_errors[field] = [];
