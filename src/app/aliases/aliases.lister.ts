@@ -95,7 +95,7 @@ import {RMM} from '../rmm';
                         [value]="item.forward_to"
                     >
                 </mat-form-field>
-
+<!--
                 <button 
                     (click)="edit(item)" 
                     color='primary' 
@@ -114,49 +114,9 @@ import {RMM} from '../rmm';
                 >
                     Delete
                 </button>
-                    <button 
-                        *ngIf="!is_visible_code_check(item)"
-                        (click)="set_visible_code_check(item, true)" 
-                        color='primary' 
-                        mat-raised-button 
-                        style="margin: 10px;"
-                    >
-                        Validate code
-                    </button>
+-->
             </div>
             <mat-divider class='transparent'></mat-divider>
-            <div *ngIf="!item.is_email_verified" style=''>
-                <div *ngIf="is_visible_code_check(item)" style='background: white; border: 1px solid #CCC'>
-                    <mat-form-field class="email_validation_code" style="margin: 10px;">
-                        <input
-                            matInput
-                            placeholder="Enter aliases validation code"
-                            [value]="item.validation_code"
-                            [(ngModel)]="item.validation_code"
-                            [ngModelOptions]="{standalone: true}"
-                        >
-                    </mat-form-field>
-
-                    <button 
-                        [disabled]="is_validation_code_set(item)"
-                        (click)="validate_email(item)" 
-                        color='primary' 
-                        mat-raised-button 
-                        style="margin: 10px;"
-                    >
-                        Validate
-                    </button>
-                    <p>
-                        Check your email <strong>{{item.localpart + '@' + item.domain}})</strong> for the validation code.
-                    </p>
-
-                </div>
-                <div *ngIf="!is_visible_code_check(item)">
-                        Alias not verified.
-                        {{item | json}}
-                        Check your email on runbox for the aliases validation code and enter <a (click)="set_visible_code_check(item, true)" href='javascript:void(0)'>here</a>.
-                </div>
-            </div>
         </form>
     </div>
 
@@ -198,31 +158,6 @@ export class AliasesLister {
       //    this.ev_reload.emit('deleted');
       //}
     });
-  }
-  validate_email (item): void {
-      const data = JSON.parse(JSON.stringify(item))
-      let req = this.rmm.alias.validate({
-          validation_code : data.validation_code,
-      })
-      req.subscribe((data)=>{
-          let reply = data.json();
-          console.log('VALIDATION REPLY', reply)
-          if ( reply.status == 'success' ) {
-              item.is_email_verified = 1;
-          } else {
-              this.show_error('Could not validate aliases.', 'Dismiss');
-          }
-      })
-  }
-  is_validation_code_set (item) {
-    if (item && item.validation_code && item.validation_code.match(/^.{256}$/)) { return true; }
-    return false;
-  }
-  is_visible_code_check (item) {
-    return item && this.visible_code_check[item.id];
-  }
-  set_visible_code_check (item, is_visible) {
-    this.visible_code_check[item.id] = is_visible
   }
   show_error (message, action) {
     this.snackBar.open(message, action, {
