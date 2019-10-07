@@ -102,6 +102,8 @@ export class ProfilesComponent implements AfterViewInit {
   };
 
   add_alias (): void {
+      window.location.href = '/mail/account_alias';
+      return;
       let item = {};
 
       this.dialog_ref = this.dialog.open(AliasesEditorModal, {
