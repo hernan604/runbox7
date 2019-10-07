@@ -23,14 +23,17 @@ import { RMM } from '../rmm';
 
 export class Profile {
     public profiles:any;
+    is_busy = false;
     constructor(
         private app: RMM,
     ) {
     }
     load() {
+        this.is_busy = true;
         let req = this.app.ua.http.get('/rest/v1/profiles', {}).pipe(timeout(60000), share())
         req.subscribe(
           data => {
+            this.is_busy = false;
             let reply = data.json();
             if ( reply.status == 'error' ) {
                 this.app.show_error( reply.error.join( '' ), 'Dismiss' )
@@ -40,6 +43,7 @@ export class Profile {
             return;
           },
           error => {
+            this.is_busy = false;
             return this.app.show_error('Could not load profiles.', 'Dismiss');
           }
         )
@@ -59,6 +63,7 @@ export class Profile {
             return this.app.show_error('Could not load profiles.', 'Dismiss');
           }
         );
+        return req;
     }
     delete(id){
         let req = this.app.ua.http.delete('/rest/v1/profile/'+id).pipe(timeout(60000), share())
@@ -69,6 +74,7 @@ export class Profile {
                 return;
             }
         });
+        return req;
     }
     update(id, values, field_errors) {
         let req = this.app.ua.http.put('/rest/v1/profile/'+id, values).pipe(timeout(60000), share())
@@ -84,5 +90,22 @@ export class Profile {
             return this.app.show_error('Could not load profiles.', 'Dismiss');
           }
         );
+        return req;
+    }
+    resend(id, values, field_errors) {
+        let req = this.app.ua.http.put('/rest/v1/profile/'+id+'/resend_validation_email').pipe(timeout(60000), share())
+        req.subscribe(
+          data => {
+            let reply = data.json();
+            if ( reply.status == 'error' ) {
+                this.app.handle_field_errors(reply, field_errors)
+                return;
+            }
+          },
+          error => {
+            return this.app.show_error('Could resend validation email.', 'Dismiss');
+          }
+        );
+        return req;
     }
 }

@@ -57,7 +57,7 @@ import {
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {ProfilesEditorModal} from './profiles.editor.modal';
 import {AliasesEditorModal} from '../aliases/aliases.editor.modal';
-
+import {RMM} from '../rmm';
 
 @Component({
     selector: 'profiles-lister',
@@ -73,9 +73,6 @@ import {AliasesEditorModal} from '../aliases/aliases.editor.modal';
         }
         .profile-form form > div > div {
             overflow: scroll;
-        }
-        .profile-form-item {
-            cursor: pointer;
         }
         .profile-form-item:hover {
             background-color: #eee;
@@ -98,7 +95,7 @@ import {AliasesEditorModal} from '../aliases/aliases.editor.modal';
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <ng-content select="[section-buttons]"></ng-content>
-        <div *ngFor="let item of values; let i = index;" class='profile-form-item' (click)="edit(item)">
+        <div *ngFor="let item of values; let i = index;" class='profile-form-item'>
             <mat-divider *ngIf="i > 0"></mat-divider>
               <div>
                 <mat-card class="mat_card" style="">
@@ -118,11 +115,17 @@ import {AliasesEditorModal} from '../aliases/aliases.editor.modal';
                         <div
                             *ngIf="!item.profile.signature"
                         >No signature found</div>
+                        <div
+                            *ngIf="item.profile.reference_type == 'preference' && item.profile.reference.status === 1"
+                        >
+                            Email not validated.
+                        </div>
+                        <mat-divider [vertical]="true"></mat-divider>
+                        <button mat-raised-button (click)="edit(item)" color="primary">EDIT</button>
                       </mat-card-subtitle>
                   </mat-card-header>
                 </mat-card>
               </div>
-            <mat-divider [vertical]="true"></mat-divider>
         </div>
     </div>
 
@@ -133,6 +136,7 @@ export class ProfilesLister {
   @Output() ev_reload = new EventEmitter<string>();
   private dialog_ref : any;
   constructor(public dialog: MatDialog,
+    public rmm: RMM,
     public snackBar: MatSnackBar,
   ) {}
   edit (item): void {
@@ -161,6 +165,19 @@ export class ProfilesLister {
               this.ev_reload.emit('deleted');
           }
       });
+  }
+  resend_validate_email () {
+      let req = this.rmm.profile.resend()
+      req.subscribe(
+        data => {
+          let reply = data.json();
+          if ( reply.status == 'success' ) {
+            this.show_error('Email validation sent','Dismiss');
+            this.rmm.profile.load()
+            return;
+          }
+        },
+      );
   }
   show_error (message, action) {
     this.snackBar.open(message, action, {
