@@ -20,8 +20,47 @@
                             Your Main Identity is the address you signed up for Runbox with, and is your main identity.
                         </h3>
                     </div>
+                    <div section-buttons>
+                        <button 
+                            mat-raised-button 
+                            color='primary'
+                            style="margin: 10px;"
+                            (click)='add_main_identity()'
+                        >
+                            Add Main Identity
+                        </button>
+                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
+                    </div>
                 </profiles-lister>
                 <mat-divider></mat-divider>
+                <profiles-lister
+                    *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('aliases')"
+                    [values]="rmm.profile.profiles.aliases"
+                    (ev_reload)="ev_reload_emiter($event)"
+                >
+                    <div section-header>
+                        <h2>
+                            Aliases
+                        </h2>
+                    </div>
+                    <div section-description>
+                        <h3>
+                            Your aliases
+                        </h3>
+                    </div>
+                    <div section-buttons>
+                        <button 
+                            mat-raised-button 
+                            color='primary'
+                            style="margin: 10px;"
+                            (click)='add_alias()'
+                        >
+                            Add Alias
+                        </button>
+                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
+                    </div>
+                </profiles-lister>
+<!--
                 <aliases-lister
                     *ngIf="rmm.alias.aliases && rmm.alias.aliases.length"
                     [values]="rmm.alias.aliases"
@@ -29,7 +68,7 @@
                 >
                     <div section-header>
                         <h2>
-                            Email Aliases
+                            Alias Profiles
                         </h2>
                     </div>
                     <div section-description>
@@ -49,6 +88,7 @@
                         {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
                     </div>
                 </aliases-lister>
+-->
                 <mat-divider></mat-divider>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"
@@ -62,7 +102,9 @@
                     </div>
                     <div section-description>
                         <h3>
-                            Profiles lets you send email from addresses that are not among your System Address or Aliases, and require verification via an email sent to the given From Address.
+                            Identities lets you send email from addresses that are not among your System Address or Aliases, and require verification via an email sent to the given From Address.
+							<br>
+							Runbox supports sending email from external email addresses including via SMTP.
                         </h3>
                     </div>
                     <div section-buttons>
@@ -74,6 +116,7 @@
                         >
                             Add Email
                         </button>
+                        {{rmm.profile.profiles.others.length}} profiles created
                     </div>
                 </profiles-lister>
             </div>
