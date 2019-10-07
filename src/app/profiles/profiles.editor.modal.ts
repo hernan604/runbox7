@@ -109,14 +109,14 @@ import {RMM} from '../rmm';
                 <div mat-dialog-content>
                     <form>
                         <mat-form-field style="margin: 10px; width: 45%">
-                            <input matInput placeholder="Name" 
+                            <input matInput placeholder="Identity name"
                                 name="name"
                                 [(ngModel)]="data.profile.name"
                                 (ngModelChange)="onchange_field('name')"
                             >
                             <div *ngIf="field_errors && field_errors.name">
                                 <mat-hint>
-                                    ie. My main profile
+                                    ie. My main identity
                                 </mat-hint>
                                 <mat-error *ngFor="let error of field_errors.name; let i = index;">
                                     {{error}}
@@ -124,7 +124,7 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-form-field>
                         <mat-form-field style="margin: 10px; width: 45%;">
-                            <input matInput placeholder="Email" 
+                            <input matInput placeholder="Email"
                                 name="email"
                                 [readonly]="!is_create"
                                 [(ngModel)]="data.profile.email"
@@ -187,6 +187,70 @@ import {RMM} from '../rmm';
                                 </mat-error>
                             </div>
                         </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <div *ngIf="data.profile.reference_type == 'preference'">
+                            <h4>SMTP Details</h4>
+                            <mat-form-field style="margin: 10px; width: 45%">
+                                <input matInput placeholder="Address - smtp.runbox.com"
+                                    name="smtp_address"
+                                    [(ngModel)]="data.profile.smtp_address"
+                                    (ngModelChange)="onchange_field('smtp_address')"
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_address">
+                                    <mat-hint>
+                                        ie. smtp.site.com
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_address; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                            <mat-form-field style="margin: 10px; width: 45%">
+                                <input matInput placeholder="Port 587 or 465"
+                                    name="smtp_port"
+                                    [(ngModel)]="data.profile.smtp_port"
+                                    (ngModelChange)="onchange_field('smtp_port')"
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_port">
+                                    <mat-hint>
+                                        ie. 587 465
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_port; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                            <mat-form-field style="margin: 10px; width: 45%">
+                                <input matInput placeholder="Username"
+                                    name="smtp_username"
+                                    [(ngModel)]="data.profile.smtp_username"
+                                    (ngModelChange)="onchange_field('smtp_username')"
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_username">
+                                    <mat-hint>
+                                        ie. your_username
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_username; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                            <mat-form-field style="margin: 10px; width: 45%">
+                                <input matInput placeholder="Password"
+                                    name="smtp_password"
+                                    [(ngModel)]="data.profile.smtp_password"
+                                    (ngModelChange)="onchange_field('smtp_password')"
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_password">
+                                    <mat-hint>
+                                        ie. YourPasswor123
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_password; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </div>
                     </form>
                 </div>
           </mat-card-content>
@@ -195,6 +259,11 @@ import {RMM} from '../rmm';
             <button mat-raised-button (click)="close()" color="warn">CANCEL</button>
           </mat-card-actions>
           <mat-card-footer>
+            <mat-progress-bar *ngIf="is_busy" mode="indeterminate"></mat-progress-bar>
+            <div
+                *ngIf="data.profile.reference_type == 'preference' && data.profile.reference.status === 1"
+            >Email not validated. Check your email or <a href="javascript:void(0)" (click)="resend_validate_email()">re-send</a>.
+            </div>
           </mat-card-footer>
         </mat-card>
     `
@@ -206,6 +275,7 @@ export class ProfilesEditorModal {
     allowed_domains = [];
     is_valid = false;
     aliases_unique = [];
+    is_busy = false;
     is_delete =false;
     is_update = false;
     is_create = false;
@@ -232,6 +302,7 @@ export class ProfilesEditorModal {
         else { this.update() }
     }
     create(){
+        this.is_busy = true;
         let data = this.data;
         let values = {
             name       : data.profile.name,
@@ -239,12 +310,17 @@ export class ProfilesEditorModal {
             from_name  : data.profile.from_name,
             reply_to   : data.profile.reply_to,
             signature  : data.profile.signature,
+            smtp_address  : data.profile.smtp_address,
+            smtp_port     : data.profile.smtp_port,
+            smtp_username : data.profile.smtp_username,
+            smtp_password : data.profile.smtp_password,
         }
         let req = this.rmm.profile.create(values, this.field_errors)
         req.subscribe(
           data => {
             let reply = data.json();
             if ( reply.status == 'success' ) {
+                this.is_busy = false;
                 this.rmm.profile.load()
                 this.close();
                 return;
@@ -253,11 +329,13 @@ export class ProfilesEditorModal {
         );
     }
     delete(){
+        this.is_busy = true;
         let data = this.data;
         let req = this.rmm.profile.delete(data.profile.id)
         req.subscribe(data => {
             let reply = data.json()
             if ( reply.status == 'success' ) {
+                this.is_busy = false;
                 this.rmm.profile.load()
                 this.close();
                 return;
@@ -265,6 +343,7 @@ export class ProfilesEditorModal {
         });
     }
     update(){
+        this.is_busy = true;
         let data = this.data;
         let obj = {
             name       : data.profile.name,
@@ -272,11 +351,16 @@ export class ProfilesEditorModal {
             from_name  : data.profile.from_name,
             reply_to   : data.profile.reply_to,
             signature  : data.profile.signature,
+            smtp_address  : data.profile.smtp_address,
+            smtp_port     : data.profile.smtp_port,
+            smtp_username : data.profile.smtp_username,
+            smtp_password : data.profile.smtp_password,
         }
         let req = this.rmm.profile.update(this.data.profile.id, obj, this.field_errors)
         req.subscribe(
           data => {
             let reply = data.json();
+            this.is_busy = false;
             if ( reply.status == 'success' ) {
                 this.rmm.profile.load()
                 this.close();
