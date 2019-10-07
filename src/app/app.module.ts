@@ -84,7 +84,7 @@ const routes: Routes = [
         component: HeaderToolbarComponent
       },
       { path: 'domainregistration', component: DomainRegisterComponent},
-      { path: 'profiles', component: ProfilesComponent},
+      { path: 'identities', component: ProfilesComponent},
       { path: 'contacts', component: ContactsAppComponent },
       { path: 'index_dev.html', component: AppComponent },
       { path: 'app', component: AppComponent },
