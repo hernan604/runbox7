@@ -22,14 +22,14 @@
                     </div>
                     <div section-buttons>
                         <button 
+                            *ngIf="!rmm.profile.profiles.main.length"
                             mat-raised-button 
                             color='primary'
                             style="margin: 10px;"
-                            (click)='add_main_identity()'
+                            (click)='add_profile("main")'
                         >
                             Add Main Identity
                         </button>
-                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
                     </div>
                 </profiles-lister>
                 <mat-divider></mat-divider>
@@ -57,38 +57,11 @@
                         >
                             Add Alias
                         </button>
-                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
+                        <span *ngIf="rmm.alias && rmm.alias.aliases_counter">
+                            {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
+                        </span>
                     </div>
                 </profiles-lister>
-<!--
-                <aliases-lister
-                    *ngIf="rmm.alias.aliases && rmm.alias.aliases.length"
-                    [values]="rmm.alias.aliases"
-                    (ev_reload)="ev_reload_emiter($event)"
-                >
-                    <div section-header>
-                        <h2>
-                            Alias Profiles
-                        </h2>
-                    </div>
-                    <div section-description>
-                        <h3>
-                            Aliases are other email addresses that point to your Main Identity, and can be created in Settings > Account > Aliases.
-                        </h3>
-                    </div>
-                    <div section-buttons>
-                        <button 
-                            mat-raised-button 
-                            color='primary'
-                            style="margin: 10px;"
-                            (click)='add_alias()'
-                        >
-                            Add Alias
-                        </button>
-                        {{rmm.alias.aliases_counter.current}} of {{rmm.alias.aliases_counter.total}} available aliases created
-                    </div>
-                </aliases-lister>
--->
                 <mat-divider></mat-divider>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"
