@@ -118,12 +118,11 @@ export class ProfilesComponent implements AfterViewInit {
       });
   }
 
-  add_profile (): void {
-    let item = {}
-
+  add_profile (type): void {
+    let item = {type: type};
     this.dialog_ref = this.dialog.open(ProfilesEditorModal, {
         width: '600px',
-        data: item
+        data: item,
     });
     this.dialog_ref.componentInstance.aliases_unique = this.aliases_unique;
     this.dialog_ref.componentInstance.is_create = true;
@@ -133,4 +132,5 @@ export class ProfilesComponent implements AfterViewInit {
         item = result;
     });
   }
+
 }
