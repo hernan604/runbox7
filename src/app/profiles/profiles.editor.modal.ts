@@ -44,6 +44,7 @@ import {
   MatDialogModule,
   MatInputModule,
   MatListModule,
+  MatGridListModule,
   MatPaginatorModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
@@ -63,13 +64,6 @@ import {RMM} from '../rmm';
 @Component({
     selector: 'profiles-edit',
     styles: [`
-        .mat_header {
-            padding: 10px 0 10px 10px
-        }
-        .mat_card.update .mat_header,
-        .mat_card.create .mat_header {
-            background-color: #013b69;
-         }
         .header-image {
             border-radius: 50%;
             flex-shrink: 0;
@@ -81,13 +75,14 @@ import {RMM} from '../rmm';
         }
     `],
     template: `
-        <mat-card class="mat_card {{css_class()}}" style="padding: 0px">
-          <mat-card-header class="mat_header">
+    <mat-card class="mat_card update create" style="padding: 0px">
+        <mat-card-header class="mat_header" style="padding: 10px 0 10px 10px; background: #013b69">
             <div mat-card-avatar class="header-image">
             </div>
             <mat-card-title >
                 <div *ngIf="is_create" style="color: #FFF;">Create profile</div>
                 <div *ngIf="is_update" style="color: #FFF;">Edit profile</div>
+                <div *ngIf="is_create_main" style="color: #FFF;">Create main profile</div>
             </mat-card-title>
             <mat-card-subtitle style="color: #FFF;">
                 <div *ngIf="is_update" style="color: #FFF;">{{data.profile.name}}</div>
@@ -95,177 +90,247 @@ import {RMM} from '../rmm';
             <mat-divider [vertical]="true" style='border-color: transparent; flex: max-content;'></mat-divider>
 
             <button *ngIf="is_update && data.profile.type != 'main'" mat-icon-button [matMenuTriggerFor]="modal_menu" class='modal_menu'>
-              <mat-icon color="warn">more_vert</mat-icon>
+                <mat-icon color="warn">more_vert</mat-icon>
             </button>
             <mat-menu #modal_menu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="delete()">
-                <mat-icon>delete</mat-icon>
-                <span>Delete</span>
-              </button>
+                <button mat-menu-item (click)="delete()">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                </button>
             </mat-menu>
+        </mat-card-header>
+        <mat-card-content>
+            <div mat-dialog-content>
+                <form>
 
-          </mat-card-header>
-          <mat-card-content>
-                <div mat-dialog-content>
-                    <form>
-                        <mat-form-field style="margin: 10px; width: 45%">
+                    <mat-grid-list cols="12" rowHeight="100px">
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                        >
+                        <mat-form-field style="margin: 10px; width: 100%">
                             <input matInput placeholder="Identity name"
                                 name="name"
                                 [(ngModel)]="data.profile.name"
                                 (ngModelChange)="onchange_field('name')"
+                                >
+                                <div *ngIf="field_errors && field_errors.name">
+                                    <mat-hint>
+                                        ie. My main identity
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.name; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
                             >
-                            <div *ngIf="field_errors && field_errors.name">
-                                <mat-hint>
-                                    ie. My main identity
-                                </mat-hint>
-                                <mat-error *ngFor="let error of field_errors.name; let i = index;">
-                                    {{error}}
-                                </mat-error>
-                            </div>
-                        </mat-form-field>
-                        <mat-form-field style="margin: 10px; width: 45%;">
-                            <input matInput placeholder="Email"
-                                name="email"
-                                [readonly]="!is_create"
-                                [(ngModel)]="data.profile.email"
-                                (ngModelChange)="onchange_field('email')"
+                            <mat-form-field style="margin: 10px; width: 100%">
+                                <input matInput placeholder="Email"
+                                    [ngStyle]="get_form_field_style()"
+                                    name="email"
+                                    [readonly]="!is_create && !is_create_main"
+                                    [(ngModel)]="data.profile.email"
+                                    (ngModelChange)="onchange_field('email')"
+                                    >
+                                <div *ngIf="field_errors && field_errors.email">
+                                    <mat-hint>
+                                        ie. jamesbond@runbox.com
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.email; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                        >
+                            <mat-form-field style="margin: 10px; width: 100%">
+                                <input matInput placeholder="From"
+                                    name="from"
+                                    [(ngModel)]="data.profile.from_name"
+                                    (ngModelChange)="onchange_field('from_name')"
+                                    >
+                                <div *ngIf="field_errors && field_errors.from_name">
+                                    <mat-hint>
+                                        ie. James Bond
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.from_name; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                                colspan="6"
+                                rowspan="1"
+                        >
+                            <mat-form-field style="margin: 10px; width: 100%">
+                                <input matInput placeholder="Reply-to"
+                                    name="reply_to"
+                                    [(ngModel)]="data.profile.reply_to"
+                                    (ngModelChange)="onchange_field('reply_to')"
+                                    >
+                                    <div *ngIf="field_errors && field_errors.reply_to">
+                                        <mat-hint>ie. jamesbond-noreply@runbox.com</mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.reply_to; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
                             >
-                            <div *ngIf="field_errors && field_errors.email">
-                                <mat-hint>
-                                    ie. jamesbond@runbox.com
-                                </mat-hint>
-                                <mat-error *ngFor="let error of field_errors.email; let i = index;">
-                                    {{error}}
-                                </mat-error>
-                            </div>
-                        </mat-form-field>
-                        <mat-form-field style="margin: 10px; width: 45%;">
-                            <input matInput placeholder="From"
-                                name="from"
-                                [(ngModel)]="data.profile.from_name"
-                                (ngModelChange)="onchange_field('from_name')"
+                            <mat-form-field style="margin: 10px; width: 100%; height: 100%">
+                                <textarea matInput placeholder="Signature"
+                                    rows=4
+                                    name="signature"
+                                    [(ngModel)]="data.profile.signature"
+                                    (ngModelChange)="onchange_field('signature')"
+                                    ></textarea>
+                                <div *ngIf="field_errors && field_errors.signature">
+                                    <mat-hint>
+                                        ie.
+                                        <br>Mr. James Bond
+                                        <br>=-=-=
+                                        <br>
+                                        <br>"My name is Bond, James Bond"
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.signature; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference'"
                             >
-                            <div *ngIf="field_errors && field_errors.from_name">
-                                <mat-hint>
-                                    ie. James Bond
-                                </mat-hint>
-                                <mat-error *ngFor="let error of field_errors.from_name; let i = index;">
-                                    {{error}}
-                                </mat-error>
-                            </div>
-                        </mat-form-field>
-                        <mat-form-field style="margin: 10px; width: 45%;">
-                            <input matInput placeholder="Reply-to"
-                                name="reply_to"
-                                [(ngModel)]="data.profile.reply_to"
-                                (ngModelChange)="onchange_field('reply_to')"
+                            <div
+                                style="text-align: left; width: 100%"
                             >
-                            <div *ngIf="field_errors && field_errors.reply_to">
-                                <mat-hint>ie. jamesbond-noreply@runbox.com</mat-hint>
-                                <mat-error *ngFor="let error of field_errors.reply_to; let i = index;">
-                                    {{error}}
-                                </mat-error>
+                                <mat-checkbox name='is_smtp_enabled' [(ngModel)]="data.profile.is_smtp_enabled">use smtp details</mat-checkbox>
                             </div>
-                        </mat-form-field>
-                        <mat-divider></mat-divider>
-                        <mat-form-field style="margin: 10px; width: 96%;">
-                            <textarea matInput placeholder="Signature"
-                                name="signature"
-                                [(ngModel)]="data.profile.signature"
-                                (ngModelChange)="onchange_field('signature')"
-                            ></textarea>
-                            <div *ngIf="field_errors && field_errors.signature">
-                                <mat-hint>
-                                    ie. 
-                                    <br>Mr. James Bond
-                                    <br>=-=-=
-                                    <br>
-                                    <br>"My name is Bond, James Bond"
-                                </mat-hint>
-                                <mat-error *ngFor="let error of field_errors.signature; let i = index;">
-                                    {{error}}
-                                </mat-error>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference' && data.profile.is_smtp_enabled"
+                            >
+                            <div
+                                style="text-align: left; width: 100%"
+                            >
+                                <h4>SMTP Details</h4>
                             </div>
-                        </mat-form-field>
-                        <mat-divider></mat-divider>
-                        <div *ngIf="data.profile.reference_type == 'preference'">
-                            <h4>SMTP Details</h4>
-                            <mat-form-field style="margin: 10px; width: 45%">
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference' && data.profile.is_smtp_enabled"
+                            >
+                            <mat-form-field style="margin: 10px; width: 100%">
                                 <input matInput placeholder="Address - smtp.runbox.com"
                                     name="smtp_address"
                                     [(ngModel)]="data.profile.smtp_address"
                                     (ngModelChange)="onchange_field('smtp_address')"
-                                >
-                                <div *ngIf="field_errors && field_errors.smtp_address">
-                                    <mat-hint>
-                                        ie. smtp.site.com
-                                    </mat-hint>
-                                    <mat-error *ngFor="let error of field_errors.smtp_address; let i = index;">
-                                        {{error}}
-                                    </mat-error>
-                                </div>
-                            </mat-form-field>
-                            <mat-form-field style="margin: 10px; width: 45%">
+                                    >
+                                    <div *ngIf="field_errors && field_errors.smtp_address">
+                                        <mat-hint>
+                                            ie. smtp.site.com
+                                        </mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.smtp_address; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference' && data.profile.is_smtp_enabled"
+                            >
+                            <mat-form-field style="margin: 10px; width: 100%">
                                 <input matInput placeholder="Port 587 or 465"
                                     name="smtp_port"
                                     [(ngModel)]="data.profile.smtp_port"
                                     (ngModelChange)="onchange_field('smtp_port')"
-                                >
-                                <div *ngIf="field_errors && field_errors.smtp_port">
-                                    <mat-hint>
-                                        ie. 587 465
-                                    </mat-hint>
-                                    <mat-error *ngFor="let error of field_errors.smtp_port; let i = index;">
-                                        {{error}}
-                                    </mat-error>
-                                </div>
-                            </mat-form-field>
-                            <mat-form-field style="margin: 10px; width: 45%">
+                                    >
+                                    <div *ngIf="field_errors && field_errors.smtp_port">
+                                        <mat-hint>
+                                            ie. 587 465
+                                        </mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.smtp_port; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference' && data.profile.is_smtp_enabled"
+                            >
+                            <mat-form-field style="margin: 10px; width: 100%">
                                 <input matInput placeholder="Username"
                                     name="smtp_username"
                                     [(ngModel)]="data.profile.smtp_username"
                                     (ngModelChange)="onchange_field('smtp_username')"
-                                >
-                                <div *ngIf="field_errors && field_errors.smtp_username">
-                                    <mat-hint>
-                                        ie. your_username
-                                    </mat-hint>
-                                    <mat-error *ngFor="let error of field_errors.smtp_username; let i = index;">
-                                        {{error}}
-                                    </mat-error>
-                                </div>
-                            </mat-form-field>
-                            <mat-form-field style="margin: 10px; width: 45%">
+                                    >
+                                    <div *ngIf="field_errors && field_errors.smtp_username">
+                                        <mat-hint>
+                                            ie. your_username
+                                        </mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.smtp_username; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="6"
+                            rowspan="1"
+                            *ngIf="data.profile.reference_type == 'preference' && data.profile.is_smtp_enabled"
+                            >
+                            <mat-form-field style="margin: 10px; width: 100%">
                                 <input matInput placeholder="Password"
                                     name="smtp_password"
                                     [(ngModel)]="data.profile.smtp_password"
                                     (ngModelChange)="onchange_field('smtp_password')"
-                                >
-                                <div *ngIf="field_errors && field_errors.smtp_password">
-                                    <mat-hint>
-                                        ie. YourPasswor123
-                                    </mat-hint>
-                                    <mat-error *ngFor="let error of field_errors.smtp_password; let i = index;">
-                                        {{error}}
-                                    </mat-error>
-                                </div>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </div>
-          </mat-card-content>
-          <mat-card-actions style="padding: 0px 10px">
-            <button mat-raised-button (click)="save()" color="primary">SAVE</button>
-            <button mat-raised-button (click)="close()" color="warn">CANCEL</button>
-          </mat-card-actions>
-          <mat-card-footer>
-            <mat-progress-bar *ngIf="is_busy" mode="indeterminate"></mat-progress-bar>
-            <div
-                *ngIf="data.profile.reference_type == 'preference' && data.profile.reference.status === 1"
-            >Email not validated. Check your email or <a href="javascript:void(0)" (click)="resend_validate_email()">re-send</a>.
-            </div>
-          </mat-card-footer>
-        </mat-card>
+                                    >
+                                    <div *ngIf="field_errors && field_errors.smtp_password">
+                                        <mat-hint>
+                                            ie. YourPasswor123
+                                        </mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.smtp_password; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </form>
+           </div>
+       </mat-card-content>
+       <mat-card-actions style="padding: 0px 25px">
+           <button mat-raised-button (click)="save()" color="primary">SAVE</button>
+           <button mat-raised-button (click)="close()" color="warn">CANCEL</button>
+       </mat-card-actions>
+       <mat-card-footer style="padding: 0px 25px">
+           <mat-progress-bar *ngIf="is_busy" mode="indeterminate"></mat-progress-bar>
+           <div
+               *ngIf="data.profile.reference_type == 'preference' && data.profile.reference.status === 1"
+               >Email not validated. Check your email or <a href="javascript:void(0)" (click)="resend_validate_email()">re-send</a>.
+           </div>
+       </mat-card-footer>
+   </mat-card>
     `
 })
 
@@ -279,6 +344,9 @@ export class ProfilesEditorModal {
     is_delete =false;
     is_update = false;
     is_create = false;
+    is_create_main = false;
+    type;
+    is_visible_smtp_detail = false;
     constructor(
         public rmm: RMM,
         private http: Http,
@@ -286,19 +354,23 @@ export class ProfilesEditorModal {
         public dialog_ref: MatDialogRef<ProfilesEditorModal>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-        if ( ! data || ! Object.keys(data).length ) {
+        if ( data && data.type ) {
+            this.type = data.type;
+            delete data.type;
+        }
+        if ( ! data || ! Object.keys(data).length || !data.profile ) {
             data = { profile : { } };
+            data.profile.email = this.rmm.me.data.user_address
         }
         this.data = data;
     }
     css_class() {
-        let css = '';
         if ( this.is_delete ) { return 'delete' }
-        else if ( this.is_create ) { return 'create' }
         else if ( this.is_update ) { return 'update' }
+        return 'create'
     }
     save() {
-        if ( this.is_create ) { this.create() }
+        if ( this.is_create || this.is_create_main ) { this.create() }
         else { this.update() }
     }
     create(){
@@ -314,6 +386,8 @@ export class ProfilesEditorModal {
             smtp_port     : data.profile.smtp_port,
             smtp_username : data.profile.smtp_username,
             smtp_password : data.profile.smtp_password,
+            type          : this.type,
+            is_smtp_enabled : ( data.profile.is_smtp_enabled ? 1 : 0 ),
         }
         let req = this.rmm.profile.create(values, this.field_errors)
         req.subscribe(
@@ -355,6 +429,7 @@ export class ProfilesEditorModal {
             smtp_port     : data.profile.smtp_port,
             smtp_username : data.profile.smtp_username,
             smtp_password : data.profile.smtp_password,
+            is_smtp_enabled : ( data.profile.is_smtp_enabled ? 1 : 0 ),
         }
         let req = this.rmm.profile.update(this.data.profile.id, obj, this.field_errors)
         req.subscribe(
@@ -380,6 +455,20 @@ export class ProfilesEditorModal {
     onchange_field ( field ) {
         if ( this.field_errors && this.field_errors[field] ) {
             this.field_errors[field] = [];
+        }
+    }
+    get_form_field_style() {
+        const styles = {};
+        if ( this.is_update ) {
+            styles['background'] = '#dedede';
+        }
+        return styles;
+    }
+    toggle_SMTP_details (action,item) {
+        if ( action == 'show' ) {
+            this.is_visible_smtp_detail = true;
+        } else {
+            this.is_visible_smtp_detail = false;
         }
     }
 }
