@@ -17,6 +17,8 @@ import {
     MatToolbarModule,
     MatTooltipModule,
     MatMenuModule,
+    MatGridListModule,
+    MatCheckboxModule,
     MatTableModule
 } from '@angular/material';
 
@@ -36,6 +38,8 @@ import { AliasesEditorModal } from '../aliases/aliases.editor.modal';
     ],
     imports: [
     BrowserModule,
+    MatGridListModule,
+    MatCheckboxModule,
     BrowserAnimationsModule,
     FormsModule,
     MatInputModule,
