@@ -23,6 +23,7 @@ import { HttpModule, JsonpModule, XHRBackend, RequestOptions, BrowserXhr } from 
 import { UserAgent } from './rmm/useragent';
 import { Profile } from './rmm/profile';
 import { Alias } from './rmm/alias';
+import { Me } from './rmm/me';
 import {
     MatSnackBar,
 } from '@angular/material';
@@ -33,6 +34,7 @@ export class RMM {
     ua;
     profile;
     alias;
+    me;
     constructor(
         public http: Http,
         public snackBar: MatSnackBar,
@@ -40,6 +42,7 @@ export class RMM {
         this.ua = new UserAgent(this, this.http)
         this.profile = new Profile(this);
         this.alias = new Alias(this);
+        this.me = new Me(this);
     }
 
     public show_error ( message, action ) {
