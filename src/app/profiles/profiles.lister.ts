@@ -53,6 +53,7 @@ import {
   MatDialog,
   MatPaginator,
   MatSnackBar,
+  MatGridListModule,
 } from '@angular/material';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {ProfilesEditorModal} from './profiles.editor.modal';
@@ -72,13 +73,10 @@ import {RMM} from '../rmm';
             margin: 10px;
         }
         .profile-form form > div > div {
-            overflow: scroll;
         }
         .profile-form-item:hover {
-            background-color: #eee;
         }
         .profile-form-item:active {
-            background-color: #CCC;
         }
         .header-image {
             border-radius: 50%;
@@ -95,41 +93,138 @@ import {RMM} from '../rmm';
         <ng-content select="[section-header]" style="margin-top: 20px;"></ng-content>
         <ng-content select="[section-description]"></ng-content>
         <ng-content select="[section-buttons]"></ng-content>
-        <div *ngFor="let item of values; let i = index;" class='profile-form-item'>
-            <mat-divider *ngIf="i > 0"></mat-divider>
-              <div>
-                <mat-card class="mat_card" style="">
-                  <mat-card-header class="mat_header" >
-                      <div mat-card-avatar class="header-image" >
-                      </div>
-                      <mat-card-title>
-                        {{item.profile.email}} {{item.profile.name?'('+item.profile.name+')':''}}
-                      </mat-card-title>
-                      <mat-card-subtitle>
-                        <div>From name: <strong>{{item.profile.from_name}}</strong></div>
-                        <div>Reply to: <strong>{{item.profile.reply_to}}</strong></div>
-                        <div *ngIf="item.profile.signature">
-                        Signature:
-                            <div [innerHTML]="item.profile.signature"></div>
-                        </div>
-                        <div
-                            *ngIf="!item.profile.signature"
-                        >No signature found</div>
-                        <div
-                            *ngIf="item.profile.reference_type == 'preference' && item.profile.reference.status === 1"
-                        >
-                            Email not validated.
-                        </div>
-                        <mat-divider [vertical]="true"></mat-divider>
-                        <button mat-raised-button (click)="edit(item)" color="primary">EDIT</button>
-                      </mat-card-subtitle>
-                  </mat-card-header>
-                </mat-card>
-              </div>
-        </div>
+        <mat-card class="mat_card" style="" *ngFor="let item of values; let i = index;" style='width: 600px; display: inline-flex; border-bottom: 1px solid #CCC'>
+            <mat-card-content class="" style="width: 100%">
+                <p>
+                    <mat-grid-list cols="12" rowHeight="35px"class=''>
+                        <mat-grid-tile
+                            colspan="1"
+                            rowspan="4"
+                            >
+                            <div mat-card-avatar class="header-image" ></div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="3"
+                            rowspan="1"
+                            style='width: 600px;'
+                            >
+                            <div
+                                style="text-align: right; width: 100%; margin-right: 5px;"
+                                >
+                                EMAIL
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="8"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                >
+                                {{item.profile.email}} {{item.profile.name?'('+item.profile.name+')':''}}
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="3"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: right; width: 100%; margin-right: 5px;"
+                                >
+                                From name:
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="8"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                            >
+                                <strong>{{item.profile.from_name}}</strong>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="3"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: right; width: 100%; margin-right: 5px;"
+                                >
+                                Reply to:
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="8"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                >
+                                <strong>{{item.profile.reply_to}}</strong>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="3"
+                            rowspan="1"
+                            >
+                            <div
+                                style="text-align: right; width: 100%; margin-right: 5px;"
+                                >
+                                Signature:
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="8"
+                            rowspan="1"
+                            >
+                            <div *ngIf="item.profile.signature"
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                >
+                                <div [innerHTML]="item.profile.signature"></div>
+                            </div>
+                            <div
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                *ngIf="!item.profile.signature"
+                                >No signature found</div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            >
+                            <div
+                                *ngIf="item.profile.reference_type == 'preference' && item.profile.is_smtp_enabled"
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                >
+                                Show SMTP <a href="javascript:void(0)" (click)="edit(item)">details</a>.
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            >
+                            <div
+                                *ngIf="item.profile.reference_type == 'preference' && item.profile.reference.status === 1"
+                                style="text-align: left; width: 100%; margin-left: 5px;"
+                                >
+                                Email not validated.
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            >
+                            <div
+                                >
+                                <button mat-raised-button (click)="edit(item)" color="primary">EDIT</button>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </p>
+            </mat-card-content>
+        </mat-card>
     </div>
-
-        `
+    `
 })
 export class ProfilesLister {
   @Input() values: any[];
@@ -138,7 +233,9 @@ export class ProfilesLister {
   constructor(public dialog: MatDialog,
     public rmm: RMM,
     public snackBar: MatSnackBar,
-  ) {}
+  ) {
+    this.rmm.me.load()
+  }
   edit (item): void {
       item = JSON.parse(JSON.stringify(item))
       this.dialog_ref = this.dialog.open(ProfilesEditorModal, {
@@ -183,6 +280,6 @@ export class ProfilesLister {
     this.snackBar.open(message, action, {
       duration: 2000,
     });
-  };
+  }
 }
 
