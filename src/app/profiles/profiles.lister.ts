@@ -87,6 +87,9 @@ import {RMM} from '../rmm';
         .mat_header {
             align-items: center
         }
+        .profile-lister {
+            margin-top: 35px;
+        }
     `],
     template: `
     <div class="profile-lister">
@@ -104,14 +107,14 @@ import {RMM} from '../rmm';
                             <div mat-card-avatar class="header-image" ></div>
                         </mat-grid-tile>
                         <mat-grid-tile
-                            colspan="3"
+                            colspan="2"
                             rowspan="1"
                             style='width: 600px;'
                             >
                             <div
                                 style="text-align: right; width: 100%; margin-right: 5px;"
                                 >
-                                EMAIL
+                                Email:
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
@@ -125,7 +128,16 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
-                            colspan="3"
+                            colspan="1"
+                            rowspan="3"
+                            >
+                            <div
+                                >
+                                <button mat-raised-button (click)="edit(item)" color="primary">EDIT</button>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile
+                            colspan="2"
                             rowspan="1"
                             >
                             <div
@@ -145,7 +157,7 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
-                            colspan="3"
+                            colspan="2"
                             rowspan="1"
                             >
                             <div
@@ -165,7 +177,7 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
-                            colspan="3"
+                            colspan="2"
                             rowspan="1"
                             >
                             <div
@@ -208,15 +220,6 @@ import {RMM} from '../rmm';
                                 style="text-align: left; width: 100%; margin-left: 5px;"
                                 >
                                 Email not validated.
-                            </div>
-                        </mat-grid-tile>
-                        <mat-grid-tile
-                            colspan="12"
-                            rowspan="1"
-                            >
-                            <div
-                                >
-                                <button mat-raised-button (click)="edit(item)" color="primary">EDIT</button>
                             </div>
                         </mat-grid-tile>
                     </mat-grid-list>
