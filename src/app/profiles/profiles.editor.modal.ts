@@ -147,6 +147,19 @@ import {RMM} from '../rmm';
                             </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile
+                            colspan="12"
+                            rowspan="1"
+                            *ngIf="data.profile.email && !is_domain_defined(data)"
+                        >
+                            <mat-form-field style="margin: 10px; width: 100%">
+                                <mat-select>
+                                    <mat-option *ngFor="let global_domain of global_domains" [value]="global_domain">
+                                      {{global_domain}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile
                             colspan="6"
                             rowspan="1"
                         >
@@ -209,6 +222,7 @@ import {RMM} from '../rmm';
                                 </div>
                             </mat-form-field>
                         </mat-grid-tile>
+<!--
                         <mat-grid-tile
                             colspan="12"
                             rowspan="1"
@@ -315,6 +329,7 @@ import {RMM} from '../rmm';
                                 </div>
                             </mat-form-field>
                         </mat-grid-tile>
+-->
                     </mat-grid-list>
                 </form>
            </div>
@@ -347,6 +362,7 @@ export class ProfilesEditorModal {
     is_create_main = false;
     type;
     is_visible_smtp_detail = false;
+    global_domains = ['runbox.com','dev.runbox.com', 'runboxemail.com'];
     constructor(
         public rmm: RMM,
         private http: Http,
@@ -360,7 +376,11 @@ export class ProfilesEditorModal {
         }
         if ( ! data || ! Object.keys(data).length || !data.profile ) {
             data = { profile : { } };
-            data.profile.email = this.rmm.me.data.user_address
+            let self = this;
+            data.profile.name = ['first_name','last_name'].map((attr) => {
+                console.log('attr', attr, self.rmm.me.data[attr]);
+                return self.rmm.me.data[attr]
+            }).join(' ')
         }
         this.data = data;
     }
@@ -470,6 +490,9 @@ export class ProfilesEditorModal {
         } else {
             this.is_visible_smtp_detail = false;
         }
+    }
+    is_domain_defined (data) {
+        return data.profile.email.match(/@/g);
     }
 }
 
