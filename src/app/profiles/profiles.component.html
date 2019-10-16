@@ -3,7 +3,6 @@
     <mat-sidenav-content>
         <section class="mat-typography">
             <h1 class="mat-h1">Identities</h1>
-            <mat-divider></mat-divider>
             <div>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('main')"
@@ -32,7 +31,6 @@
                         </button>
                     </div>
                 </profiles-lister>
-                <mat-divider></mat-divider>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('aliases')"
                     [values]="rmm.profile.profiles.aliases"
@@ -62,7 +60,6 @@
                         </span>
                     </div>
                 </profiles-lister>
-                <mat-divider></mat-divider>
                 <profiles-lister
                     *ngIf="rmm.profile && rmm.profile.profiles && rmm.profile.profiles.hasOwnProperty('others')"
                     [values]="rmm.profile.profiles.others"
@@ -76,8 +73,8 @@
                     <div section-description>
                         <h3>
                             Identities lets you send email from addresses that are not among your System Address or Aliases, and require verification via an email sent to the given From Address.
-							<br>
-							Runbox supports sending email from external email addresses including via SMTP.
+                            <br>
+                            Runbox supports sending email from external email addresses including via SMTP.
                         </h3>
                     </div>
                     <div section-buttons>
