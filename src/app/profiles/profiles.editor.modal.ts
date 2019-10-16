@@ -241,16 +241,16 @@ import {RMM} from '../rmm';
                                     name="smtp_address"
                                     [(ngModel)]="data.profile.smtp_address"
                                     (ngModelChange)="onchange_field('smtp_address')"
-                                    >
-                                    <div *ngIf="field_errors && field_errors.smtp_address">
-                                        <mat-hint>
-                                            ie. smtp.site.com
-                                        </mat-hint>
-                                        <mat-error *ngFor="let error of field_errors.smtp_address; let i = index;">
-                                            {{error}}
-                                        </mat-error>
-                                    </div>
-                                </mat-form-field>
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_address">
+                                    <mat-hint>
+                                        ie. smtp.site.com
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_address; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="6"
@@ -262,16 +262,16 @@ import {RMM} from '../rmm';
                                     name="smtp_port"
                                     [(ngModel)]="data.profile.smtp_port"
                                     (ngModelChange)="onchange_field('smtp_port')"
-                                    >
-                                    <div *ngIf="field_errors && field_errors.smtp_port">
-                                        <mat-hint>
-                                            ie. 587 465
-                                        </mat-hint>
-                                        <mat-error *ngFor="let error of field_errors.smtp_port; let i = index;">
-                                            {{error}}
-                                        </mat-error>
-                                    </div>
-                                </mat-form-field>
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_port">
+                                    <mat-hint>
+                                        ie. 587 465
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_port; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="6"
@@ -283,16 +283,16 @@ import {RMM} from '../rmm';
                                     name="smtp_username"
                                     [(ngModel)]="data.profile.smtp_username"
                                     (ngModelChange)="onchange_field('smtp_username')"
-                                    >
-                                    <div *ngIf="field_errors && field_errors.smtp_username">
-                                        <mat-hint>
-                                            ie. your_username
-                                        </mat-hint>
-                                        <mat-error *ngFor="let error of field_errors.smtp_username; let i = index;">
-                                            {{error}}
-                                        </mat-error>
-                                    </div>
-                                </mat-form-field>
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_username">
+                                    <mat-hint>
+                                        ie. your_username
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_username; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="6"
@@ -304,16 +304,16 @@ import {RMM} from '../rmm';
                                     name="smtp_password"
                                     [(ngModel)]="data.profile.smtp_password"
                                     (ngModelChange)="onchange_field('smtp_password')"
-                                    >
-                                    <div *ngIf="field_errors && field_errors.smtp_password">
-                                        <mat-hint>
-                                            ie. YourPasswor123
-                                        </mat-hint>
-                                        <mat-error *ngFor="let error of field_errors.smtp_password; let i = index;">
-                                            {{error}}
-                                        </mat-error>
-                                    </div>
-                                </mat-form-field>
+                                >
+                                <div *ngIf="field_errors && field_errors.smtp_password">
+                                    <mat-hint>
+                                        ie. YourPasswor123
+                                    </mat-hint>
+                                    <mat-error *ngFor="let error of field_errors.smtp_password; let i = index;">
+                                        {{error}}
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
                         </mat-grid-tile>
                     </mat-grid-list>
                 </form>
