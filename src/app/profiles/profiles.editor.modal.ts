@@ -146,19 +146,31 @@ import {RMM} from '../rmm';
                                 </div>
                             </mat-form-field>
                         </mat-grid-tile>
+
                         <mat-grid-tile
                             colspan="12"
                             rowspan="1"
-                            *ngIf="data.profile.email && !is_domain_defined(data)"
-                        >
-                            <mat-form-field style="margin: 10px; width: 100%">
-                                <mat-select>
-                                    <mat-option *ngFor="let global_domain of global_domains" [value]="global_domain">
-                                      {{global_domain}}
+                            *ngIf="is_aliases_global_domain(data) && rmm.runbox_domain.data"
+                            >
+                            <mat-form-field style="margin: 10px; width: 100%"
+                            >
+                                <mat-form-field>
+                                  <mat-label>Use preferred runbox domain</mat-label>
+                                  <mat-select
+                                    [(ngModel)]="data.profile.preferred_runbox_domain"
+                                    [(value)]="data.profile.preferred_runbox_domain"
+                                    (ngModelChange)="onchange_field('preferred_runbox_domain')"
+                                    name="preferred_runbox_domain"
+                                    [ngModelOptions]="{standalone: true}"
+                                  >
+                                    <mat-option *ngFor="let runbox_domain of rmm.runbox_domain.data" [value]="runbox_domain.name">
+                                      {{runbox_domain.name}}
                                     </mat-option>
-                                </mat-select>
+                                  </mat-select>
+                                </mat-form-field>
                             </mat-form-field>
                         </mat-grid-tile>
+
                         <mat-grid-tile
                             colspan="6"
                             rowspan="1"
@@ -362,7 +374,6 @@ export class ProfilesEditorModal {
     is_create_main = false;
     type;
     is_visible_smtp_detail = false;
-    global_domains = ['runbox.com','dev.runbox.com', 'runboxemail.com'];
     constructor(
         public rmm: RMM,
         private http: Http,
@@ -439,7 +450,7 @@ export class ProfilesEditorModal {
     update(){
         this.is_busy = true;
         let data = this.data;
-        let obj = {
+        let values = {
             name       : data.profile.name,
             email      : data.profile.email,
             from_name  : data.profile.from_name,
@@ -451,7 +462,7 @@ export class ProfilesEditorModal {
             smtp_password : data.profile.smtp_password,
             is_smtp_enabled : ( data.profile.is_smtp_enabled ? 1 : 0 ),
         }
-        let req = this.rmm.profile.update(this.data.profile.id, obj, this.field_errors)
+        let req = this.rmm.profile.update(this.data.profile.id, values, this.field_errors)
         req.subscribe(
           data => {
             let reply = data.json();
@@ -460,6 +471,11 @@ export class ProfilesEditorModal {
                 this.rmm.profile.load()
                 this.close();
                 return;
+            } else {
+                console.log('ERROR:', reply)
+                if ( reply.field_errors ) {
+                    this.field_errors = reply.field_errors;
+                }
             }
           },
         );
@@ -476,6 +492,30 @@ export class ProfilesEditorModal {
         if ( this.field_errors && this.field_errors[field] ) {
             this.field_errors[field] = [];
         }
+        if ( field === 'preferred_runbox_domain' ) {
+            const data = this.data;
+            const selected_domain = data.profile.preferred_runbox_domain;
+            ['reply_to','email'].forEach((attr)=>{
+                var email = data.profile[attr]; 
+                if ( email && email.match(/@/g) ) {
+                    var is_replaced = false;
+                    this.rmm.runbox_domain.data
+                        .map((item)=>{return item.name}) // runbox domains array
+                        .forEach((runbox_domain)=>{
+                            if ( is_replaced ) { return }
+                            var rgx = '@' + runbox_domain + '$';
+                            var re  = new RegExp(rgx,"g");
+                            if ( email.match(re) ) {
+                                email = data.profile[attr].replace(re, '@'+selected_domain)
+                                this.data.profile[attr] = email;
+                                is_replaced = true
+                            }
+                        })
+                } else {
+                    this.data.profile[attr] = [data.profile[attr], selected_domain].join('@');
+                }
+            });
+        }
     }
     get_form_field_style() {
         const styles = {};
@@ -491,8 +531,23 @@ export class ProfilesEditorModal {
             this.is_visible_smtp_detail = false;
         }
     }
-    is_domain_defined (data) {
-        return data.profile.email.match(/@/g);
+    is_aliases_global_domain (data) {
+        return ( data.profile.reference_type == 'aliases' && ! data.profile.email.match(/@/g) )
+            || ( data.profile.reference_type == 'aliases' && data.profile.email && this.global_domains().filter((d)=>{
+                var rgx = d.name;
+                var re = new RegExp(rgx,"g");
+                if ( data.profile.email.match(re) ) {
+                    return true
+                }
+            }) )
+    }
+    global_domains () {
+        console.log('this.rmm.runbox_domain.data',this.rmm.runbox_domain)
+        if ( ! this.rmm.runbox_domain.data ) {
+            return [{name:'runbox.com'},{name:'runbox.no'}];
+        } else {
+            return this.rmm.runbox_domain.data;
+        }
     }
 }
 

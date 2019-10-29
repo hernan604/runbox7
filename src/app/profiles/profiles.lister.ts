@@ -129,7 +129,7 @@ import {RMM} from '../rmm';
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="1"
-                            rowspan="3"
+                            rowspan="4"
                             >
                             <div
                                 >
@@ -203,9 +203,9 @@ import {RMM} from '../rmm';
                         <mat-grid-tile
                             colspan="12"
                             rowspan="1"
+                            *ngIf="item.profile.reference_type == 'preference' && item.profile.is_smtp_enabled"
                             >
                             <div
-                                *ngIf="item.profile.reference_type == 'preference' && item.profile.is_smtp_enabled"
                                 style="text-align: left; width: 100%; margin-left: 5px;"
                                 >
                                 Show SMTP <a href="javascript:void(0)" (click)="edit(item)">details</a>.
@@ -214,9 +214,9 @@ import {RMM} from '../rmm';
                         <mat-grid-tile
                             colspan="12"
                             rowspan="1"
+                            *ngIf="item.profile.reference_type == 'preference' && item.profile.reference.status === 1"
                             >
                             <div
-                                *ngIf="item.profile.reference_type == 'preference' && item.profile.reference.status === 1"
                                 style="text-align: left; width: 100%; margin-left: 5px;"
                                 >
                                 Email not validated.
