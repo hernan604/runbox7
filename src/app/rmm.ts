@@ -24,6 +24,7 @@ import { UserAgent } from './rmm/useragent';
 import { Profile } from './rmm/profile';
 import { Alias } from './rmm/alias';
 import { Me } from './rmm/me';
+import { RunboxDomain } from './rmm/runbox_domain';
 import {
     MatSnackBar,
 } from '@angular/material';
@@ -35,6 +36,7 @@ export class RMM {
     profile;
     alias;
     me;
+    runbox_domain;
     constructor(
         public http: Http,
         public snackBar: MatSnackBar,
@@ -43,6 +45,7 @@ export class RMM {
         this.profile = new Profile(this);
         this.alias = new Alias(this);
         this.me = new Me(this);
+        this.runbox_domain = new RunboxDomain(this);
     }
 
     public show_error ( message, action ) {

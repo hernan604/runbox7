@@ -83,6 +83,7 @@ export class ProfilesComponent implements AfterViewInit {
     public dialog: MatDialog,
     public rmm: RMM,
   ) {
+    this.rmm.runbox_domain.load();
     this.load_profiles();
     this.load_aliases();
   }
