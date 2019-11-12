@@ -62,6 +62,7 @@ import { ResizerModule } from './directives/resizer.module';
 import { DomainRegisterModule } from './domainregister/domainregister.module';
 import { DomainRegisterComponent } from './domainregister/domainregister.component';
 import { ProfilesComponent } from './profiles/profiles.component';
+import { DevComponent } from './dev/dev.component';
 import { MainContainerComponent } from './maincontainer.component';
 import { HeaderToolbarComponent } from './menu/headertoolbar.component';
 import { LocalSearchIndexModule } from './xapian/localsearchindex.module';
@@ -85,6 +86,8 @@ const routes: Routes = [
       },
       { path: 'domainregistration', component: DomainRegisterComponent},
       { path: 'identities', component: ProfilesComponent},
+      { path: 'dev', component: DevComponent},
+      { path: 'dev/:selected_component', component: DevComponent},
       { path: 'contacts', component: ContactsAppComponent },
       { path: 'index_dev.html', component: AppComponent },
       { path: 'app', component: AppComponent },
