@@ -23,6 +23,7 @@ import { RMM } from '../rmm';
 
 export class Profile {
     public profiles:any;
+    public profiles_verified:any;
     is_busy = false;
     constructor(
         private app: RMM,
@@ -40,6 +41,28 @@ export class Profile {
                 return
             }
             this.profiles = reply.result;
+            return;
+          },
+          error => {
+            this.is_busy = false;
+            return this.app.show_error('Could not load profiles.', 'Dismiss');
+          }
+        )
+        return req
+    }
+    load_verified() {
+        this.is_busy = true;
+        let req = this.app.ua.http.get('/rest/v1/profiles/verified', {}).pipe(timeout(60000), share())
+        req.subscribe(
+          data => {
+            this.is_busy = false;
+            let reply = data.json();
+            if ( reply.status == 'error' ) {
+                this.app.show_error( reply.error.join( '' ), 'Dismiss' )
+                return
+            }
+            this.profiles_verified = reply.result;
+console.log('PROFILES VERIFIED', this.profiles_verified)
             return;
           },
           error => {
