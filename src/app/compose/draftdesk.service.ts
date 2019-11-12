@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 import { RunboxWebmailAPI, FromAddress } from '../rmmapi/rbwebmail';
 import { MessageInfo } from '../xapian/messageinfo';
 import { Observable, from, of, AsyncSubject } from 'rxjs';
-import { map, mergeMap, bufferCount, take } from 'rxjs/operators';
+import { filter, map, mergeMap, bufferCount, take } from 'rxjs/operators';
 
 export class ForwardedAttachment {
     constructor(
@@ -173,7 +173,7 @@ export class DraftDeskService {
     private refreshFroms(): Observable<FromAddress[]> {
         let newfroms: FromAddress[] = [];
         let defaultprofile: FromAddress;
-        return this.rmmapi.getDefaultProfile().pipe(
+        let result = this.rmmapi.getDefaultProfile().pipe(
             map((profile) => {
                 defaultprofile = profile;
                 newfroms.push(defaultprofile);
@@ -181,20 +181,9 @@ export class DraftDeskService {
             mergeMap(() => this.rmmapi.getFromAddress()),
             map((froms) =>
                 newfroms = newfroms.concat(froms)),
-            mergeMap(() => this.rmmapi.getAliases()),
-            map((aliases) => {
-                    newfroms = newfroms.concat(aliases.map((alias) => ({
-                                reply_to: alias.email,
-                                email: alias.email,
-                                id: alias.id,
-                                name: defaultprofile.name,
-                                folder: defaultprofile.folder
-                            } as FromAddress)));
-                    return newfroms;
-                }
-            ),
             map(() => this.froms = newfroms.map((fromObj) => FromAddress.fromObject(fromObj)))
         );
+        return result;
     }
 
     private refreshDrafts(): Observable<DraftFormModel[]> {
