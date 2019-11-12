@@ -124,38 +124,16 @@ import {RMM} from '../rmm';
                                 </div>
                             </mat-form-field>
                         </mat-grid-tile>
+
                         <mat-grid-tile
                             colspan="6"
                             rowspan="1"
-                            >
-                            <mat-form-field style="margin: 10px; width: 100%">
-                                <input matInput placeholder="Email"
-                                    [ngStyle]="get_form_field_style()"
-                                    name="email"
-                                    [readonly]="!is_create && !is_create_main"
-                                    [(ngModel)]="data.profile.email"
-                                    (ngModelChange)="onchange_field('email')"
-                                    >
-                                <div *ngIf="field_errors && field_errors.email">
-                                    <mat-hint>
-                                        ie. jamesbond@runbox.com
-                                    </mat-hint>
-                                    <mat-error *ngFor="let error of field_errors.email; let i = index;">
-                                        {{error}}
-                                    </mat-error>
-                                </div>
-                            </mat-form-field>
-                        </mat-grid-tile>
-
-                        <mat-grid-tile
-                            colspan="12"
-                            rowspan="1"
-                            *ngIf="is_aliases_global_domain(data) && rmm.runbox_domain.data"
+                            *ngIf="is_aliases_global_domain(data) && rmm.runbox_domain.data ; else other_content"
                             >
                             <mat-form-field style="margin: 10px; width: 100%"
                             >
                                 <mat-form-field>
-                                  <mat-label>Use preferred runbox domain</mat-label>
+                                  <mat-label>Email</mat-label>
                                   <mat-select
                                     [(ngModel)]="data.profile.preferred_runbox_domain"
                                     [(value)]="data.profile.preferred_runbox_domain"
@@ -164,12 +142,37 @@ import {RMM} from '../rmm';
                                     [ngModelOptions]="{standalone: true}"
                                   >
                                     <mat-option *ngFor="let runbox_domain of rmm.runbox_domain.data" [value]="runbox_domain.name">
-                                      {{runbox_domain.name}}
+                                      {{localpart}}@{{runbox_domain.name}}
                                     </mat-option>
                                   </mat-select>
                                 </mat-form-field>
                             </mat-form-field>
                         </mat-grid-tile>
+
+                        <ng-template #other_content>
+                            <mat-grid-tile
+                                colspan="6"
+                                rowspan="1"
+                                >
+                                <mat-form-field style="margin: 10px; width: 100%">
+                                    <input matInput placeholder="Email"
+                                        [ngStyle]="get_form_field_style()"
+                                        name="email"
+                                        [readonly]="!is_create && !is_create_main"
+                                        [(ngModel)]="data.profile.email"
+                                        (ngModelChange)="onchange_field('email')"
+                                        >
+                                    <div *ngIf="field_errors && field_errors.email">
+                                        <mat-hint>
+                                            ie. jamesbond@runbox.com
+                                        </mat-hint>
+                                        <mat-error *ngFor="let error of field_errors.email; let i = index;">
+                                            {{error}}
+                                        </mat-error>
+                                    </div>
+                                </mat-form-field>
+                            </mat-grid-tile>
+                        </ng-template>
 
                         <mat-grid-tile
                             colspan="6"
@@ -191,15 +194,28 @@ import {RMM} from '../rmm';
                                 </div>
                             </mat-form-field>
                         </mat-grid-tile>
+
                         <mat-grid-tile
                                 colspan="6"
                                 rowspan="1"
+                                *ngIf="!is_different_reply_to; else field_reply_to"
                         >
-                            <mat-form-field style="margin: 10px; width: 100%">
-                                <input matInput placeholder="Reply-to"
-                                    name="reply_to"
-                                    [(ngModel)]="data.profile.reply_to"
-                                    (ngModelChange)="onchange_field('reply_to')"
+                                <mat-checkbox name='is_different_reply_to'
+                                    [(ngModel)]="is_different_reply_to">
+                                    Use different Reply-to
+                                </mat-checkbox>
+                        </mat-grid-tile>
+
+                        <ng-template #field_reply_to>
+                            <mat-grid-tile
+                                    colspan="6"
+                                    rowspan="1"
+                            >
+                                <mat-form-field style="margin: 10px; width: 100%">
+                                    <input matInput placeholder="Reply-to"
+                                        name="reply_to"
+                                        [(ngModel)]="data.profile.reply_to"
+                                        (ngModelChange)="onchange_field('reply_to')"
                                     >
                                     <div *ngIf="field_errors && field_errors.reply_to">
                                         <mat-hint>ie. jamesbond-noreply@runbox.com</mat-hint>
@@ -209,6 +225,8 @@ import {RMM} from '../rmm';
                                     </div>
                                 </mat-form-field>
                             </mat-grid-tile>
+                        </ng-template>
+
                         <mat-grid-tile
                             colspan="12"
                             rowspan="1"
@@ -374,6 +392,8 @@ export class ProfilesEditorModal {
     is_create_main = false;
     type;
     is_visible_smtp_detail = false;
+    is_different_reply_to = false;
+    localpart;
     constructor(
         public rmm: RMM,
         private http: Http,
@@ -385,6 +405,9 @@ export class ProfilesEditorModal {
             this.type = data.type;
             delete data.type;
         }
+        if ( data.profile && data.profile.email ) {
+            this.set_localpart(data);
+        }
         if ( ! data || ! Object.keys(data).length || !data.profile ) {
             data = { profile : { } };
             let self = this;
@@ -394,11 +417,26 @@ export class ProfilesEditorModal {
             }).join(' ')
         }
         this.data = data;
+        this.check_reply_to(this.data);
     }
-    css_class() {
-        if ( this.is_delete ) { return 'delete' }
-        else if ( this.is_update ) { return 'update' }
-        return 'create'
+    check_reply_to(data) {
+        if (data && data.profile.email && data.profile.reply_to && 
+            data.profile.reply_to !== data.profile.email) {
+            this.is_different_reply_to=true;
+            return;
+        }
+        this.is_different_reply_to=false;
+    }
+    set_localpart(data) {
+        if (data.profile.email.match(/@/g)) {
+            this.localpart = data.profile.email.replace(/@.+/g, '');
+            var regex = /(.+)@(.+)/g;
+            var match = regex.exec(data.profile.email);
+            data.profile.preferred_runbox_domain = match[2];
+        } else {
+            this.localpart = data.profile.email;
+            data.profile.preferred_runbox_domain = this.localpart;
+        }
     }
     save() {
         if ( this.is_create || this.is_create_main ) { this.create() }
@@ -495,7 +533,7 @@ export class ProfilesEditorModal {
         if ( field === 'preferred_runbox_domain' ) {
             const data = this.data;
             const selected_domain = data.profile.preferred_runbox_domain;
-            ['reply_to','email'].forEach((attr)=>{
+            ['email'].forEach((attr)=>{
                 var email = data.profile[attr]; 
                 if ( email && email.match(/@/g) ) {
                     var is_replaced = false;
@@ -539,7 +577,8 @@ export class ProfilesEditorModal {
                 if ( data.profile.email.match(re) ) {
                     return true
                 }
-            }) )
+                return false;
+            }).length )
     }
     global_domains () {
         console.log('this.rmm.runbox_domain.data',this.rmm.runbox_domain)
