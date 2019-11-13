@@ -132,20 +132,18 @@ import {RMM} from '../rmm';
                             >
                             <mat-form-field style="margin: 10px; width: 100%"
                             >
-                                <mat-form-field>
-                                  <mat-label>Email</mat-label>
-                                  <mat-select
-                                    [(ngModel)]="data.profile.preferred_runbox_domain"
-                                    [(value)]="data.profile.preferred_runbox_domain"
-                                    (ngModelChange)="onchange_field('preferred_runbox_domain')"
-                                    name="preferred_runbox_domain"
-                                    [ngModelOptions]="{standalone: true}"
-                                  >
-                                    <mat-option *ngFor="let runbox_domain of rmm.runbox_domain.data" [value]="runbox_domain.name">
-                                      {{localpart}}@{{runbox_domain.name}}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
+                                <mat-label>Email</mat-label>
+                                <mat-select
+                                  [(ngModel)]="data.profile.preferred_runbox_domain"
+                                  [(value)]="data.profile.preferred_runbox_domain"
+                                  (ngModelChange)="onchange_field('preferred_runbox_domain')"
+                                  name="preferred_runbox_domain"
+                                  [ngModelOptions]="{standalone: true}"
+                                >
+                                  <mat-option *ngFor="let runbox_domain of rmm.runbox_domain.data" [value]="runbox_domain.name">
+                                    {{localpart}}@{{runbox_domain.name}}
+                                  </mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </mat-grid-tile>
 
