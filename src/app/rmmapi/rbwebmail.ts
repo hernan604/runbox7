@@ -79,6 +79,7 @@ export class FromAddress {
     public id: number;
     public folder: string;
     public name: string;
+    public signature: string;
 
     public nameAndAddress: string;
 
@@ -413,10 +414,24 @@ export class RunboxWebmailAPI {
     }
 
     public getFromAddress(): Observable<FromAddress[]> {
-        return this.http.get('/ajax/from_address').pipe(
-            map((res: FromAddressResponse) =>
-                res.from_addresses
-            ));
+        return this.http.get('/rest/v1/profiles/verified').pipe(
+            map((res) =>{
+                let results = [];
+                Object.keys(res['result']).forEach( (k) => {
+                    res['result'][k].forEach((item)=>{
+                        const profile = FromAddress.fromObject({
+                            id: item.profile.id,
+                            email: item.profile.email,
+                            reply_to: item.profile.reply_to,
+                            name: item.profile.from_name,
+                            signature: item.profile.signature,
+                        });
+                        console.log('PROFILE:', profile);
+                        results.push(profile)
+                    })
+                } )
+                return results
+            }));
     }
 
     public getDefaultProfile(): Observable<FromAddress> {
