@@ -177,6 +177,7 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
+                            *ngIf="item.profile.signature"
                             colspan="2"
                             rowspan="1"
                             >
@@ -187,18 +188,15 @@ import {RMM} from '../rmm';
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile
+                            *ngIf="item.profile.signature"
                             colspan="8"
                             rowspan="1"
                             >
-                            <div *ngIf="item.profile.signature"
+                            <div
                                 style="text-align: left; width: 100%; margin-left: 5px;"
                                 >
                                 <div [innerHTML]="item.profile.signature"></div>
                             </div>
-                            <div
-                                style="text-align: left; width: 100%; margin-left: 5px;"
-                                *ngIf="!item.profile.signature"
-                                >No signature found</div>
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="12"
