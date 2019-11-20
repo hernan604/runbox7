@@ -102,7 +102,7 @@ import {RMM} from '../rmm';
                     <mat-grid-list cols="12" rowHeight="35px"class=''>
                         <mat-grid-tile
                             colspan="1"
-                            rowspan="4"
+                            rowspan="{{item.profile.signature?4:3}}"
                             >
                             <div mat-card-avatar class="header-image" ></div>
                         </mat-grid-tile>
@@ -129,7 +129,7 @@ import {RMM} from '../rmm';
                         </mat-grid-tile>
                         <mat-grid-tile
                             colspan="1"
-                            rowspan="4"
+                            rowspan="{{item.profile.signature?4:3}}"
                             >
                             <div
                                 >
