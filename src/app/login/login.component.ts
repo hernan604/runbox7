@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
     loginerrormessage: string;
     twofactor: any = false;
     twofactorerror: string;
-    unlock_question: string;
 
     constructor(private httpclient: HttpClient,
         private router: Router,
@@ -59,7 +58,6 @@ export class LoginComponent implements OnInit {
         this.twofactor.totpcode = undefined;
         this.twofactor.otpcode = undefined;
         this.twofactor.unlock_code = undefined;
-        this.twofactor.unlock_answer = undefined;
         this.twofactor.trust_this_browser = undefined;
 
         if (theform.twofactormethod === 'totp') {
@@ -73,7 +71,6 @@ export class LoginComponent implements OnInit {
         } else if (theform.twofactormethod === 'unlock_code') {
             this.twofactor.cmd = 'authunlockcode';
             this.twofactor.unlock_code = theform.unlock_code;
-            this.twofactor.unlock_answer = theform.unlock_answer;
         }
         this.httpclient.post('/ajax_mfa_authenticate', this.twofactor).pipe(
             map((loginresonseobj: any) => {
@@ -95,7 +92,6 @@ export class LoginComponent implements OnInit {
                     this.twofactorerror = null;
                     this.loginerrormessage = null;
                     this.twofactor = loginBodyObj;
-                    this.unlock_question = loginresonseobj.unlock_question;
                 } else {
                     this.loginerrormessage = loginresonseobj.message + ': ' + loginresonseobj.error;
                 }
