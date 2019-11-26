@@ -36,6 +36,7 @@ import { ProgressDialog } from '../dialog/dialog.module';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RunboxLocale } from '../rmmapi/rblocale';
 import { ProgressSnackbarComponent } from '../dialog/progresssnackbar.component';
+import { RMM } from '../rmm';
 
 export class MessageFields {
     id: number;
@@ -163,6 +164,7 @@ export class RunboxWebmailAPI {
         public snackBar: MatSnackBar,
         private http: HttpClient,
         private dialog: MatDialog,
+        public rmm: RMM,
         private ngZone: NgZone
     ) {
         this.rblocale = new RunboxLocale();
@@ -414,8 +416,9 @@ export class RunboxWebmailAPI {
     }
 
     public getFromAddress(): Observable<FromAddress[]> {
-        return this.http.get('/rest/v1/profiles/verified').pipe(
-            map((res) =>{
+        return this.rmm.profile.load_verified().pipe(
+            map((http_res) =>{
+            let res = http_res["json"]();
                 let results = [];
                 Object.keys(res['result']).forEach( (k) => {
                     res['result'][k].forEach((item)=>{
@@ -431,7 +434,8 @@ export class RunboxWebmailAPI {
                     })
                 } )
                 return results
-            }));
+            })
+        );
     }
 
     public getDefaultProfile(): Observable<FromAddress> {

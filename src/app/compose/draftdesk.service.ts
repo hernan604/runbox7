@@ -173,14 +173,8 @@ export class DraftDeskService {
     private refreshFroms(): Observable<FromAddress[]> {
         let newfroms: FromAddress[] = [];
         let defaultprofile: FromAddress;
-        let result = this.rmmapi.getDefaultProfile().pipe(
-            map((profile) => {
-                defaultprofile = profile;
-                newfroms.push(defaultprofile);
-            }),
-            mergeMap(() => this.rmmapi.getFromAddress()),
-            map((froms) =>
-                newfroms = newfroms.concat(froms)),
+        let result = this.rmmapi.getFromAddress().pipe(
+            map((froms) =>newfroms = newfroms.concat(froms)),
             map(() => this.froms = newfroms.map((fromObj) => FromAddress.fromObject(fromObj)))
         );
         return result;
