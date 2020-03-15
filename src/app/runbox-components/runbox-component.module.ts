@@ -1,4 +1,3 @@
-
 // --------- BEGIN RUNBOX LICENSE ---------
 // Copyright (C) 2016-2018 Runbox Solutions AS (runbox.com).
 // 
@@ -24,32 +23,40 @@ import { FormsModule } from '@angular/forms';
 import { MenuModule } from '../menu/menu.module';
 import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { DevComponent } from './dev.component';
+
+
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTableModule} from '@angular/material/table';
+
 import { RunboxIntroComponent } from '../runbox-components/runbox-intro';
 import { RunboxListComponent } from '../runbox-components/runbox-list';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { RunboxComponentModule } from '../runbox-components/runbox-component.module';
+import { RunboxContainerComponent } from '../runbox-components/runbox-container';
+import { RunboxSectionComponent } from '../runbox-components/runbox-section';
+import { RunboxSlideToggleComponent } from '../runbox-components/runbox-slide-toggle';
+import { RunboxTimerComponent } from '../runbox-components/runbox-timer';
 
 @NgModule({
     declarations: [
-        DevComponent,
+        RunboxIntroComponent,
+        RunboxListComponent,
+        RunboxContainerComponent,
+        RunboxSectionComponent,
+        RunboxSlideToggleComponent,
+        RunboxTimerComponent,
     ],
     imports: [
-		RunboxComponentModule,
         CommonModule,
         MatGridListModule,
         MatCheckboxModule,
@@ -62,17 +69,20 @@ import { RunboxComponentModule } from '../runbox-components/runbox-component.mod
         MatListModule,
         MatProgressBarModule,
         MatSelectModule,
+        MatSlideToggleModule,
         MatSidenavModule,
         MatToolbarModule,
         MatTooltipModule,
         MatTableModule,
         MenuModule,
-        RouterModule.forChild([
-            { path: '',                    component: DevComponent },
-            { path: ':selected_component', component: DevComponent },
-        ])
     ],
 	exports: [
+        RunboxIntroComponent,
+        RunboxListComponent,
+        RunboxContainerComponent,
+        RunboxSectionComponent,
+        RunboxSlideToggleComponent,
+        RunboxTimerComponent,
 	],
     entryComponents: [
     ],
@@ -81,6 +91,7 @@ import { RunboxComponentModule } from '../runbox-components/runbox-component.mod
     bootstrap: [
     ]
 })
-export class DevModule { }
+
+export class RunboxComponentModule { }
 
 
