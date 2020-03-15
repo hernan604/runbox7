@@ -49,7 +49,7 @@ import { RunboxComponentModule } from '../runbox-components/runbox-component.mod
         DevComponent,
     ],
     imports: [
-		RunboxComponentModule,
+        RunboxComponentModule,
         CommonModule,
         MatGridListModule,
         MatCheckboxModule,
@@ -72,8 +72,8 @@ import { RunboxComponentModule } from '../runbox-components/runbox-component.mod
             { path: ':selected_component', component: DevComponent },
         ])
     ],
-	exports: [
-	],
+    exports: [
+    ],
     entryComponents: [
     ],
     providers: [

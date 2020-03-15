@@ -52,7 +52,7 @@ export class AccountSecurityAppPass {
                 return;
             }
             this.list();
-console.log('REPLY', reply)
+console.log('REPLY', reply);
             return;
           },
           error => {

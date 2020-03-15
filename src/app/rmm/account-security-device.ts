@@ -45,7 +45,7 @@ export class AccountSecurityDevice {
                 return;
             }
             this.results = reply['devices'];
-console.log('DEVICES TRUSTED: ', this.results)
+console.log('DEVICES TRUSTED: ', this.results);
             return;
           },
           error => {

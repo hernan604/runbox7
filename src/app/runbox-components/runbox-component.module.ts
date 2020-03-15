@@ -76,14 +76,14 @@ import { RunboxTimerComponent } from '../runbox-components/runbox-timer';
         MatTableModule,
         MenuModule,
     ],
-	exports: [
+    exports: [
         RunboxIntroComponent,
         RunboxListComponent,
         RunboxContainerComponent,
         RunboxSectionComponent,
         RunboxSlideToggleComponent,
         RunboxTimerComponent,
-	],
+    ],
     entryComponents: [
     ],
     providers: [
